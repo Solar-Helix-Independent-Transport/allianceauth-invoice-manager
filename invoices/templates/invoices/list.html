@@ -40,7 +40,7 @@
                                         <td>{{inv.character}}</td>
                                         <td>{{inv.amount}}</td>
                                         <td>{{inv.invoice_ref}}</td>
-                                        <td>{{inv.due_date}}</td>
+                                        <td>{{inv.due_date|date:"Y-m-d h:i"}}</td>
                                         <td>{{inv.note}}</td>
                                     </tr>
                                 {% endfor %}

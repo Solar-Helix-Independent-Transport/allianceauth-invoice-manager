@@ -12,7 +12,7 @@ class Invoices(MenuItemHook):
                               navactive=['corptools:'])
 
     def render(self, request):
-        if request.user.has_perm('invoices.can_access_invoices'):
+        if request.user.has_perm('invoices.view_corp') or request.user.has_perm('invoices.view_alliance') or request.user.has_perm('invoices.view_all'):
             return MenuItemHook.render(self, request)
         return ''
 
