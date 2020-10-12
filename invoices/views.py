@@ -9,14 +9,11 @@ from django.utils.translation import ugettext_lazy as _
 from .models import Invoice
 @login_required
 def show_invoices(request):
-    character_list = request.user.character_ownerships.all().select_related('character')
-
     invoices = Invoice.objects.visible_to(request.user).filter(paid=False)
     outstanding_isk = invoices.aggregate(total_isk=Sum('amount'))
     completed_invoices = Invoice.objects.visible_to(request.user).filter(paid=True).order_by('-due_date')[:100]
     
-    ctx = {'char_list':character_list,
-            'invoices':invoices, 
+    ctx = { 'invoices':invoices, 
             'outstanding_isk': outstanding_isk['total_isk'],
             'complete_invoices':completed_invoices}
 
