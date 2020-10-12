@@ -24,7 +24,7 @@ class Invoice(models.Model):
 
     note = models.TextField(blank=True, null=True, default=None,)
     def __str__(self):
-        return "{} - {} - {}".format(self.character.character_name, self.invoice_ref, self.amount)
+        return "{} - {} - {}".format(self.character, self.invoice_ref, self.amount)
 
     class Meta:
         permissions = (('view_corp', 'Can View Own Corps Invoices'),
