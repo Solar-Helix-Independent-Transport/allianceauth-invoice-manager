@@ -45,7 +45,7 @@ class InvoiceQuerySet(models.QuerySet):
 
 class InvoiceManager(models.Manager):
     def get_queryset(self):
-        return InvoiceQuerySet(self.model, using=self._db)
+        return InvoiceQuerySet(self.model, using=self._db).select_related('payment', 'character', 'character__character_ownership__user__profile__main_character')
 
     def visible_to(self, user):
         return self.get_queryset().visible_to(user)

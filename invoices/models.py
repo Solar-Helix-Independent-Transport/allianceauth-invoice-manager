@@ -5,6 +5,7 @@ from corptools.models import CorporationWalletJournalEntry
 
 from . import app_settings
 from .managers import InvoiceManager
+from django.utils import timezone
 
 if app_settings.discord_bot_active():
     import aadiscordbot
@@ -26,8 +27,13 @@ class Invoice(models.Model):
     def __str__(self):
         return "{} - {} - {}".format(self.character, self.invoice_ref, self.amount)
 
+    @property
+    def is_past_due(self):
+        return timezone.now() > self.due_date
+
     class Meta:
         permissions = (('view_corp', 'Can View Own Corps Invoices'),
-                       ('view_alliance', 'Can View Oen Alliances Invoices'),
+                       ('view_alliance', 'Can View Own Alliances Invoices'),
                        ('view_all', 'Can View All Invoices'),
+                       ('access_invoices', 'Can Access the Invoice App')
                       )
