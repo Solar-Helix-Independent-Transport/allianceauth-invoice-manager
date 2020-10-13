@@ -1,6 +1,6 @@
 from django.db import models
 from allianceauth.eveonline.models import EveCharacter
-
+from allianceauth.notifications import notify
 from corptools.models import CorporationWalletJournalEntry
 
 from . import app_settings
@@ -9,6 +9,9 @@ from django.utils import timezone
 
 if app_settings.discord_bot_active():
     import aadiscordbot
+
+import logging
+logger = logging.getLogger(__name__)
 
 class Invoice(models.Model):
 
@@ -30,6 +33,26 @@ class Invoice(models.Model):
     @property
     def is_past_due(self):
         return timezone.now() > self.due_date
+
+    def notify(self, message, title="Invoice Bot Message"):
+        u = self.character.character_ownership.user
+        message = "Invoice:{} Ƶ{}\n{}".format(
+            self.invoice_ref,
+            self.amount,
+            message
+        )
+        if app_settings.discord_bot_active(): 
+            try:
+                aadiscordbot.tasks.send_direct_message.delay(u.discord.uid, message)
+            except Exception as e:
+                logger.error(e, exc_info=True)
+                pass
+        notify(
+            u, 
+            title,
+            message,
+            'info'
+        )
 
     class Meta:
         permissions = (('view_corp', 'Can View Own Corps Invoices'),

@@ -37,4 +37,4 @@ def check_for_payments(self):
                 invoice.paid = True
                 invoice.payment = payment_dict[payment.reason][0]
                 invoice.save()
-                #invoice.notify()
+                invoice.notify("Payment Received", "Invoice Paid")

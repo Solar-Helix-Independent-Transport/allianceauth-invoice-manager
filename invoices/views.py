@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 
 from .models import Invoice
+
 @login_required
 def show_invoices(request):
     chars = request.user.character_ownerships.all().values_list('character')
