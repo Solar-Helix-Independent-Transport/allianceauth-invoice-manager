@@ -102,6 +102,7 @@
                                 <th>Ref</th>
                                 <th>Due Date</th>
                                 <th>Note</th>
+                                <th>Character</th>
                             </thead>
                             <tbody>
                                 {% for inv in admin_invoices %}
@@ -113,6 +114,7 @@
                                     <td>{{inv.invoice_ref}}</td>
                                     <td>{{inv.due_date|date:"Y-m-d h:i"}}</td>
                                     <td>{{inv.note}}</td>
+                                    <td>{{inv.character}}</td>
                                 </tr>{% endfor %}
                             </tbody>
                         </table>
@@ -174,7 +176,7 @@ $(document).ready(function() {
     $('#paid-table').DataTable({
         "filterDropDown": {
             columns: [{
-                idx: 1
+                idx: 7
             },
             {
                 idx: 2
@@ -183,7 +185,18 @@ $(document).ready(function() {
         "lengthMenu": [
             [25, 50, -1],
             [25, 50, "All"]
-        ]
+        ],
+        "order": [
+            [4, "asc"]
+        ],
+        "columnDefs": [{
+            "visible": false,
+            "targets": [7]
+        },
+        {
+            "sortable": false,
+            "targets": 0
+        }]
     });
 });
 {% endblock %}}
