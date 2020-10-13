@@ -58,8 +58,8 @@
                                         <td><img src="{{ inv.character.portrait_url_32 }}" class="img-circle"></td>
                                         <td>{{inv.character}}<br><span class="badge badge-default">{{inv.character.character_ownership.user.profile.main_character.character_name}}</span></span></td>
                                         <td>{{inv.character.character_ownership.user.profile.main_character.corporation_name}}</td>
-                                        <td>{{inv.amount|intcomma}}</td>
-                                        <td>{{inv.invoice_ref}}</td>
+                                        <td style="white-space: nowrap;">{{inv.amount|intcomma}}</td>
+                                        <td style="white-space: nowrap;">{{inv.invoice_ref}}</td>
                                         <td>{{inv.due_date|date:"Y-m-d h:i"}}</td>
                                         <td>{{inv.note}}</td>
                                         <td>No</td>
@@ -71,8 +71,8 @@
                                         <td><img src="{{ inv.character.portrait_url_32 }}" class="img-circle"></td>
                                         <td>{{inv.character}}<br><span class="badge badge-default">{{inv.character.character_ownership.user.profile.main_character.character_name}}</span></span></td>
                                         <td>{{inv.character.character_ownership.user.profile.main_character.corporation_name}}</td>
-                                        <td>{{inv.amount|intcomma}}</td>
-                                        <td>{{inv.invoice_ref}}</td>
+                                        <td style="white-space: nowrap;">{{inv.amount|intcomma}}</td>
+                                        <td style="white-space: nowrap;">{{inv.invoice_ref}}</td>
                                         <td>{{inv.due_date|date:"Y-m-d h:i"}}</td>
                                         <td>Paid: {{inv.payment.date|date:"Y-m-d h:i"}}</td>
                                         <td>Yes</td>
@@ -110,8 +110,8 @@
                                     <td><img src="{{ inv.character.portrait_url_32 }}" class="img-circle"></td>
                                     <td>{{inv.character}}<br><span class="badge badge-default">{{inv.character.character_ownership.user.profile.main_character.character_name}}</span></span></td>
                                     <td>{{inv.character.corporation_name}}</td>
-                                    <td>{{inv.amount|intcomma}}</td>
-                                    <td>{{inv.invoice_ref}}</td>
+                                    <td style="white-space: nowrap;">{{inv.amount|intcomma}}</td>
+                                    <td style="white-space: nowrap;">{{inv.invoice_ref}}</td>
                                     <td>{{inv.due_date|date:"Y-m-d h:i"}}</td>
                                     <td>{{inv.note}}</td>
                                     <td>{{inv.character}}</td>
