@@ -50,7 +50,6 @@
                                 <th>Due Date</th>
                                 <th>Note</th>
                                 <th>Paid</th>
-                                <th>Character</th>
                             </thead>
                             <tbody>
                                 {% for inv in invoices %}
@@ -63,7 +62,6 @@
                                         <td>{{inv.due_date|date:"Y-m-d h:i"}}</td>
                                         <td>{{inv.note}}</td>
                                         <td>No</td>
-                                        <td>{{inv.character}}</td>
                                     </tr>
                                 {% endfor %}                                
                                 {% for inv in complete_invoices %}
@@ -76,7 +74,6 @@
                                         <td>{{inv.due_date|date:"Y-m-d h:i"}}</td>
                                         <td>Paid: {{inv.payment.date|date:"Y-m-d h:i"}}</td>
                                         <td>Yes</td>
-                                        <td>{{inv.character}}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -89,7 +86,7 @@
         {% if admin_invoices|length > 0 %}
         <div class="col-md-12">
             <div class="panel panel-default" >
-                <div class="panel-heading text-center"><h3 class="panel-title">Manager View</h3></div>
+                <div class="panel-heading text-center"><h3 class="panel-title">Outstanding Invoices</h3></div>
                 <div class="panel-body">
                     {% if admin_invoices %}
                     <div class="col-md-12 table-responsive">
@@ -103,6 +100,7 @@
                                 <th>Due Date</th>
                                 <th>Note</th>
                                 <th>Character</th>
+                                <th>Main Character</th>
                             </thead>
                             <tbody>
                                 {% for inv in admin_invoices %}
@@ -115,6 +113,7 @@
                                     <td>{{inv.due_date|date:"Y-m-d h:i"}}</td>
                                     <td>{{inv.note}}</td>
                                     <td>{{inv.character}}</td>
+                                    <td>{{inv.character.character_ownership.user.profile.main_character.character_name}}</td>
                                 </tr>{% endfor %}
                             </tbody>
                         </table>
@@ -146,12 +145,7 @@ table.dataTable tbody td {
 $(document).ready(function() {
     $('#outstanding-table').DataTable({
         "filterDropDown": {
-            columns: [{
-                    idx: 8
-                },
-                {
-                    idx: 2
-                },
+            columns: [
                 {
                     idx: 7
                 }
@@ -166,7 +160,7 @@ $(document).ready(function() {
         ],
         "columnDefs": [{
             "visible": false,
-            "targets": [7,8]
+            "targets": [7]
         },
         {
             "sortable": false,
@@ -176,10 +170,10 @@ $(document).ready(function() {
     $('#paid-table').DataTable({
         "filterDropDown": {
             columns: [{
-                idx: 7
+                idx: 2
             },
             {
-                idx: 2
+                idx: 8
             }]
         },
         "lengthMenu": [
@@ -191,7 +185,7 @@ $(document).ready(function() {
         ],
         "columnDefs": [{
             "visible": false,
-            "targets": [7]
+            "targets": [7,8]
         },
         {
             "sortable": false,

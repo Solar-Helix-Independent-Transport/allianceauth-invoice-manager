@@ -10,6 +10,7 @@ CELERY_ALWAYS_EAGER = True  # Forces celery to run locally for testing
 
 INSTALLED_APPS += [
     'invoices',
+    'corptools'
 ]
 
 ROOT_URLCONF = 'tests.urls'

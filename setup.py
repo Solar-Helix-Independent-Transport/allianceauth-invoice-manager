@@ -1,6 +1,7 @@
 import os
 from setuptools import find_packages, setup
 install_requires = [
+    'allianceauth',
 ]
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     README = readme.read()

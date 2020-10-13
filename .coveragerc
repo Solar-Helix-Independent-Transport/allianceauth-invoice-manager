@@ -1,11 +1,11 @@
 [run]
 branch = True
 source =
-    groupbot
+    invoices
 
 omit =
-    */groupbot/migrations/*
-    */groupbot/tasks.py
+    */invoices/migrations/*
+    */invoices/tasks.py
     */tests/*
     */.tox/*
     */bin/*
