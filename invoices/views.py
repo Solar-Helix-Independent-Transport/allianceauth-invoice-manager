@@ -15,11 +15,15 @@ def show_invoices(request):
     outstanding_isk = invoices.aggregate(total_isk=Sum('amount'))
     admin_isk = admin_invoices.aggregate(total_isk=Sum('amount'))
     completed_invoices = Invoice.objects.visible_to(request.user).filter(paid=True, character__in=chars).order_by('-due_date')[:10]
-    
+    if outstanding_isk['total_isk'] == None:
+        outstanding = 0
+    else:
+        outstanding = outstanding_isk['total_isk']
+
     ctx = { 'invoices':invoices, 
             'admin_invoices':admin_invoices,
-            'admin_isk':admin_isk['total_isk'],
-            'outstanding_isk': outstanding_isk['total_isk'],
+            'admin_isk': admin_isk['total_isk'],
+            'outstanding_isk': outstanding,
             'complete_invoices':completed_invoices}
 
     return render(request, 'invoices/list.html', context=ctx)
