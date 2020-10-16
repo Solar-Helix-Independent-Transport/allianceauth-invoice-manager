@@ -6,7 +6,7 @@ from . import urls
 class Invoices(MenuItemHook):
     def __init__(self):
         MenuItemHook.__init__(self,
-                              _('Invoices'),
+                              _('Alliance Contributions'),
                               'fas fa-file-invoice-dollar fa-fw',
                               'invoices:list',
                               navactive=['corptools:'])

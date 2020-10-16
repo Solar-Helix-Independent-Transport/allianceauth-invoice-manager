@@ -34,7 +34,7 @@ class Invoice(models.Model):
     def is_past_due(self):
         return timezone.now() > self.due_date
 
-    def notify(self, message, title="Invoice Bot Message"):
+    def notify(self, message, title="Contributions Bot Message"):
         u = self.character.character_ownership.user
         message = "Invoice:{} Ƶ{}\n{}".format(
             self.invoice_ref,
