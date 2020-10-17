@@ -26,15 +26,16 @@ def check_for_payments(self):
             payment_dict[payment.reason] = []
         payment_dict[payment.reason].append(payment)
 
+
     for invoice in invoices:
         if invoice.invoice_ref in payment_dict:
             logger.debug("Payment Found!")
             payment_totals = 0
-            for p in payment_dict[payment.reason]:
+            for p in payment_dict[invoice.invoice_ref]:
                 payment_totals += p.amount
             
             if payment_totals >= invoice.amount:
                 invoice.paid = True
-                invoice.payment = payment_dict[payment.reason][0]
+                invoice.payment = payment_dict[invoice.invoice_ref][0]
                 invoice.save()
                 invoice.notify("Payment Received", "Paid")
