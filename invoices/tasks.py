@@ -28,6 +28,7 @@ def check_for_payments(self):
 
     logger.info(payment_dict)
     for invoice in invoices:
+        logger.info("Checking {}".format(invoice.invoice_ref))
         if invoice.invoice_ref in payment_dict:
             logger.info("Payment Found! {}".format(invoice.invoice_ref))
             payment_totals = 0
