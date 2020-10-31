@@ -41,3 +41,4 @@ def check_for_payments(self):
                 invoice.payment = payment_dict[invoice.invoice_ref][0]
                 invoice.save()
                 invoice.notify("Payment Received", "Paid")
+ 
