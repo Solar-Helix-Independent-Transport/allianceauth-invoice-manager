@@ -145,6 +145,21 @@ class TestInvoicesAccessPerms(TestCase):
         self.assertNotIn(self.ci7, cs)
         self.assertNotIn(self.ci8, cs)
 
+    def test_no_perms_get_self_u2_paid(self):  # always get self.
+        self.ci3.paid = True
+        self.ci3.save()
+        cs = Invoice.objects.visible_to(self.user2)
+        self.assertNotIn(self.ci1, cs)
+        self.assertNotIn(self.ci2, cs)
+        self.assertIn(self.ci3, cs)
+        self.assertNotIn(self.ci4, cs)
+        self.assertNotIn(self.ci5, cs)
+        self.assertNotIn(self.ci6, cs)
+        self.assertNotIn(self.ci7, cs)
+        self.assertNotIn(self.ci8, cs)
+        self.ci3.paid = False
+        self.ci3.save()
+
     def test_no_perms_get_self_u3(self):  # always get self.
         cs = Invoice.objects.visible_to(self.user3)
         self.assertNotIn(self.ci1, cs)
@@ -178,6 +193,22 @@ class TestInvoicesAccessPerms(TestCase):
         self.assertNotIn(self.ci6, cs)
         self.assertNotIn(self.ci7, cs)
         self.assertNotIn(self.ci8, cs)
+
+    def test_get_corp_in_alliance_paid(self):
+        self.user2.user_permissions.add(self.view_corp_permission)
+        self.ci3.paid = True
+        self.ci3.save()
+        cs = Invoice.objects.visible_to(self.user2)
+        self.assertNotIn(self.ci1, cs)
+        self.assertNotIn(self.ci2, cs)
+        self.assertIn(self.ci3, cs)
+        self.assertIn(self.ci4, cs)
+        self.assertNotIn(self.ci5, cs)
+        self.assertNotIn(self.ci6, cs)
+        self.assertNotIn(self.ci7, cs)
+        self.assertNotIn(self.ci8, cs)
+        self.ci3.paid = False
+        self.ci3.save()
 
     def test_get_alliance_no_alliance(self):
         self.user4.user_permissions.add(self.view_alliance_permission)
