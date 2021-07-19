@@ -27,6 +27,7 @@ class Invoice(models.Model):
     payment = models.OneToOneField(CorporationWalletJournalEntry, blank=True, null=True, default=None, on_delete=models.SET_NULL, related_name='invoice')
 
     note = models.TextField(blank=True, null=True, default=None,)
+
     def __str__(self):
         return "{} - {} - {}".format(self.character, self.invoice_ref, self.amount)
 
