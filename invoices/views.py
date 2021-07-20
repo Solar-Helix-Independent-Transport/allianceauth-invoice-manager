@@ -41,6 +41,21 @@ def show_invoices(request):
 
 @login_required
 @permission_required('invoices.admin')
+def show_admin(request):
+
+    check_payments = PeriodicTask.objects.filter(
+        task='invoices.tasks.check_for_payments', enabled=True).count()
+    outstanding_payments = PeriodicTask.objects.filter(
+        task='invoices.tasks.check_for_outstanding', enabled=True).count()
+
+    context = {
+        "check_payments": check_payments,
+        "outstanding_payments": outstanding_payments,
+    }
+    return render(request, 'invoices/admin.html', context=context)
+
+@login_required
+@permission_required('invoices.admin')
 def admin_create_tasks(request):
     schedule_check_payments, _ = CrontabSchedule.objects.get_or_create(minute='15,30,45',
                                                              hour='*',
@@ -79,4 +94,4 @@ def admin_create_tasks(request):
     messages.info(
         request, "Created/Reset Invoice Task to defaults")
 
-    return redirect('invoices:list')
+    return redirect('invoices:admin')

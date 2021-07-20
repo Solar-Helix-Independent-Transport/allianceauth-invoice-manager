@@ -19,7 +19,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 {% if perms.invoices.admin %}
-                 <li><a class="" href="{% url 'invoices:list' %}">Invoice Managment</a></li>
+                 <li><a class="" href="{% url 'invoices:admin' %}">Invoice Managment</a></li>
                 {% endif %}
             </ul>
         </div>
