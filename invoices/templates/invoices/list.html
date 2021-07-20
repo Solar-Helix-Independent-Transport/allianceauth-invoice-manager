@@ -3,9 +3,32 @@
 {% load humanize %}
 {% block page_title %}{% trans "Alliance Contributions" %}{% endblock %}
 {% block content %}
+<br>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'invoices:list' %}">Alliance Contributions</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                {% if perms.invoices.admin %}
+                 <li><a class="" href="{% url 'invoices:list' %}">Invoice Managment</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
 <div class="col-lg-12">
     <div class="col-lg-10 col-lg-offset-1 container">
-        <h1 class="text-center">Alliance Contributions</h1>
         <div class="col-md-8">
             <div class="panel panel-{% if outstanding_isk > 0 %}warning{% else %}success{% endif %}">
                 <div class="panel-heading text-center"><h3 class="panel-title">Outstanding</h3></div>
