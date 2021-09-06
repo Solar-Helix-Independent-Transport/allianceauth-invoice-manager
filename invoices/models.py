@@ -1,6 +1,6 @@
 from django.db import models
 from allianceauth.eveonline.models import EveCharacter
-from allianceauth.notifications import notify
+from allianceauth.notifications import notify as auth_notify
 from corptools.models import CorporationWalletJournalEntry
 
 from . import app_settings
@@ -37,7 +37,7 @@ class Invoice(models.Model):
 
     def notify(self, message, title="Contributions Bot Message"):
         u = self.character.character_ownership.user
-        message = "Invoice:{} Ƶ{}\n{}".format(
+        message = "Invoice:{} Ƶ{:.2f}\n{}".format(
             self.invoice_ref,
             self.amount,
             message
@@ -48,7 +48,7 @@ class Invoice(models.Model):
             except Exception as e:
                 logger.error(e, exc_info=True)
                 pass
-        notify(
+        auth_notify(
             u, 
             title,
             message,
