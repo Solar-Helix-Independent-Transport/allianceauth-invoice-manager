@@ -129,6 +129,7 @@
                                 <th></th>
                                 <th>Character</th>
                                 <th>Corporation</th>
+                                <th>Alliance</th>
                                 <th>Amount</th>
                                 <th>Reference</th>
                                 <th>Due Date</th>
@@ -142,6 +143,7 @@
                                     <td><img src="{{ inv.character.portrait_url_32 }}" class="img-circle"></td>
                                     <td>{{inv.character}}<br><span class="badge badge-default">{{inv.character.character_ownership.user.profile.main_character.character_name}}</span></span></td>
                                     <td>{{inv.character.corporation_name}}</td>
+                                    <td>{{inv.character.alliance_name}}</td>
                                     <td style="white-space: nowrap;">{{inv.amount|intcomma}}</td>
                                     <td style="white-space: nowrap;">{{inv.invoice_ref}}</td>
                                     <td>{{inv.due_date|date:"Y-m-d h:i"}}</td>
@@ -205,9 +207,10 @@ $(document).ready(function() {
         "filterDropDown": {
             columns: [{
                 idx: 2
-            },
-            {
-                idx: 8
+            },{
+                idx: 3
+            },{
+                idx: 9
             }]
         },
         "lengthMenu": [
@@ -215,11 +218,11 @@ $(document).ready(function() {
             [25, 50, "All"]
         ],
         "order": [
-            [5, "asc"]
+            [6, "asc"]
         ],
         "columnDefs": [{
             "visible": false,
-            "targets": [7,8]
+            "targets": [8,9]
         },
         {
             "sortable": false,
