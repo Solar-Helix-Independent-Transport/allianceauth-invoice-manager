@@ -3,16 +3,16 @@ from django.utils.translation import ugettext_lazy as _
 from allianceauth import hooks
 
 from .models import Invoice
-
+from . import app_settings
 from . import urls
 
 class Invoices(MenuItemHook):
     def __init__(self):
         MenuItemHook.__init__(self,
-                              _('Alliance Contributions'),
+                              app_settings.INVOICES_APP_NAME,
                               'fas fa-file-invoice-dollar fa-fw',
                               'invoices:list',
-                              navactive=['corptools:'])
+                              navactive=['invoices:'])
 
     def render(self, request):
         if request.user.has_perm('invoices.access_invoices') or request.user.has_perm('invoices.view_corp') or request.user.has_perm('invoices.view_alliance') or request.user.has_perm('invoices.view_all'):
