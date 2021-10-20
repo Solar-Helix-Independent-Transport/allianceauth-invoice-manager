@@ -1,7 +1,9 @@
 {% extends 'allianceauth/base.html' %}
 {% load i18n %}
 {% load humanize %}
-{% block page_title %}{% trans "Alliance Contributions" %}{% endblock %}
+{% load invoices %}
+
+{% block page_title %}{% app_name %}{% endblock %}
 {% block content %}
 <br>
 <nav class="navbar navbar-default">
@@ -13,7 +15,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url 'invoices:list' %}">Alliance Contributions</a>
+            <a class="navbar-brand" href="{% url 'invoices:list' %}">{% app_name %}</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -129,6 +131,7 @@
                                 <th></th>
                                 <th>Character</th>
                                 <th>Corporation</th>
+                                <th>Alliance</th>
                                 <th>Amount</th>
                                 <th>Reference</th>
                                 <th>Due Date</th>
@@ -142,6 +145,7 @@
                                     <td><img src="{{ inv.character.portrait_url_32 }}" class="img-circle"></td>
                                     <td>{{inv.character}}<br><span class="badge badge-default">{{inv.character.character_ownership.user.profile.main_character.character_name}}</span></span></td>
                                     <td>{{inv.character.corporation_name}}</td>
+                                    <td>{{inv.character.alliance_name}}</td>
                                     <td style="white-space: nowrap;">{{inv.amount|intcomma}}</td>
                                     <td style="white-space: nowrap;">{{inv.invoice_ref}}</td>
                                     <td>{{inv.due_date|date:"Y-m-d h:i"}}</td>
@@ -205,9 +209,10 @@ $(document).ready(function() {
         "filterDropDown": {
             columns: [{
                 idx: 2
-            },
-            {
-                idx: 8
+            },{
+                idx: 3
+            },{
+                idx: 9
             }]
         },
         "lengthMenu": [
@@ -215,11 +220,11 @@ $(document).ready(function() {
             [25, 50, "All"]
         ],
         "order": [
-            [5, "asc"]
+            [6, "asc"]
         ],
         "columnDefs": [{
             "visible": false,
-            "targets": [7,8]
+            "targets": [8,9]
         },
         {
             "sortable": false,

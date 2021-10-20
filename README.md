@@ -11,15 +11,16 @@ Included `Bits and Bobs`:
 
  The `ToDo` List:
   * Make Payment Corp selectable at invoice level
-  * Add the copy `Ref` and Open info in game from SRP Mod
+  * Add the copy `Ref` and Open info in game from SRP-Mod
 
 ## Installation
- 1. Install the Repo from git `pip install -U git+https://github.com/Solar-Helix-Independent-Transport/allianceauth-invoice-manager.git`
+ 0. this app is built as a sub module of [corptools](https://github.com/pvyParts/allianceauth-corp-tools), please install this first.
+ 1. Install the app `pip install -U allianceauth-invoices`
  2. Add `'invoices',` to your `INSTALLED_APPS` in your projects `local.py`
  3. run migrations and restart auth
  4. go go the following address to set up default cron tasks `AUTH ADDRESS/invoice/admin_create_tasks/`
  5. setup your perms as documented below
- 6. add characters and corp tokens as required.
+ 6. add characters and corp tokens as required
  7. Setup update tasks if you wish for the data to be auto updated. See Usage Below.
 
 ## Set Corp ID
@@ -27,7 +28,13 @@ Add the below lines to your `local.py` settings file, Changing the contexts to y
 
  ```python
 ## Settings for Invoice Manager
-PAYMENT_CORP = 1000169
+PAYMENT_CORP = 123456789
+ ```
+
+You can optionally se the name of the app in the ui by setting this setting
+ ```python
+## name for Invoice Manager
+INVOICES_APP_NAME = "Invoices Pay Now!"
  ```
 
 ## Permissions

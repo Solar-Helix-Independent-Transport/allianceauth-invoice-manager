@@ -14,7 +14,7 @@ def get_site_url():  # regex sso url
 PAYMENT_CORP = getattr(settings, "PAYMENT_CORP", 1639878825)
 
 # Name of this app as shown in the Auth sidebar, page titles
-#INVOICES_APP_NAME = clean_setting("INVOICES_APP_NAME", "Alliance Contributions", required_type=str)
+INVOICES_APP_NAME = getattr(settings, "INVOICES_APP_NAME", "Alliance Contributions")
 
 
 def discord_bot_active():

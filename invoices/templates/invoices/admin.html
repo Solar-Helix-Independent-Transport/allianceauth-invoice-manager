@@ -1,7 +1,8 @@
 {% extends 'allianceauth/base.html' %}
 {% load i18n %}
 {% load humanize %}
-{% block page_title %}{% trans "Alliance Contributions" %}{% endblock %}
+{% load invoices %}
+{% block page_title %}{% app_name %}{% endblock %}
 {% block content %}
 <br>
 <nav class="navbar navbar-default">
@@ -13,7 +14,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url 'invoices:list' %}">Alliance Contributions</a>
+            <a class="navbar-brand" href="{% url 'invoices:list' %}">{% app_name %}</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
