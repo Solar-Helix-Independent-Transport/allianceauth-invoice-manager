@@ -32,6 +32,6 @@ class Command(BaseCommand):
                 if payment_totals >= invoice.amount:
                     self.stdout.write("Payed! {}".format(invoice.invoice_ref))
                     invoice.paid = True
-                    invoice.payment = payment_dict[invoice.invoice_ref][0]
+                    #invoice.payment = payment_dict[invoice.invoice_ref][0]
                     invoice.save()
                     invoice.notify("Payment Received", "Paid")
