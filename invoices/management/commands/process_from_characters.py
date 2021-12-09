@@ -13,7 +13,7 @@ class Command(BaseCommand):
         invoices = Invoice.objects.filter(paid=False)
         refs = invoices.values_list('invoice_ref')
         payments = CharacterWalletJournalEntry.objects.filter(reason__in=refs,
-                                                              amount__gt=1)
+                                                              amount__lt=0)
         payment_dict = {}
         for payment in payments:
             if payment.reason not in payment_dict:
@@ -27,7 +27,7 @@ class Command(BaseCommand):
                 self.stdout.write("Payment Found! {}".format(invoice.invoice_ref))
                 payment_totals = 0
                 for p in payment_dict[invoice.invoice_ref]:
-                    payment_totals += p.amount
+                    payment_totals += p.amount * -1
 
                 if payment_totals >= invoice.amount:
                     self.stdout.write("Payed! {}".format(invoice.invoice_ref))
