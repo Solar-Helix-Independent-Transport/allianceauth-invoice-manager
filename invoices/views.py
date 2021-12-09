@@ -77,7 +77,7 @@ def admin_create_tasks(request):
         task='invoices.tasks.check_for_payments',
         defaults={
             'crontab': schedule_check_payments,
-            'name': 'Check For Invoice Putstanding Payments',
+            'name': 'Check For Invoice Outstanding Payments',
             'enabled': True
         }
     )
