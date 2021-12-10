@@ -95,3 +95,9 @@ def admin_create_tasks(request):
         request, "Created/Reset Invoice Task to defaults")
 
     return redirect('invoices:admin')
+
+
+@login_required
+def react_main(request):
+    # get available models
+    return render(request, 'invoices/react_base.html')

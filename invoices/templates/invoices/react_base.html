@@ -1,0 +1,16 @@
+{% extends 'allianceauth/base.html' %} {% load static %}
+{% block page_title%}Contributions!{% endblock %}
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/invoices-style.css' %}" />
+
+{% endblock %} {% block content %}
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<br />
+<div id="app"></div>
+
+{% endblock %} {% block extra_javascript %}
+<!-- Load React. -->
+<script src="{% static 'invoices/main.js' %}"></script>
+
+{% endblock %}
