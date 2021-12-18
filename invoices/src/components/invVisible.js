@@ -81,7 +81,7 @@ const InvVisible = () => {
             </Panel.Body>
         </Panel>
       ) : (
-        <PanelLoader/>
+        <></>
       )
     }
     </>
