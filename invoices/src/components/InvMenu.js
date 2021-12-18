@@ -43,7 +43,7 @@ const InvMenu = () => {
                     className="spinner-size"
                   />
                 ) : (
-                  <>Ƶ {amountDue}</>
+                  <>Ƶ {amountDue.toLocaleString()}</>
                 )}
               </h3>
               <br />

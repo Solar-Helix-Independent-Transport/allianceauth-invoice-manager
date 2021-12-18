@@ -1,9 +1,10 @@
 import React from "react";
-import { Panel } from "react-bootstrap";
 import { useQuery } from "react-query";
 import { loadAllVisible } from "../apis/Invoices";
-import { BaseTable, SelectColumnFilter } from "../components/BaseTable";
+import { BaseTable, textColumnFilter } from "../components/BaseTable";
 import { PanelLoader } from "./PanelLoader";
+import { Button, Panel, Glyphicon, ButtonGroup } from "react-bootstrap";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const InvVisible = () => {
   const { isLoading, error, data } = useQuery(
@@ -17,7 +18,7 @@ const InvVisible = () => {
       {
         Header: "Character",
         accessor: "character.character_name",
-        Filter: SelectColumnFilter,
+        Filter: textColumnFilter,
         filter: "includes",
       },
       {
@@ -28,18 +29,42 @@ const InvVisible = () => {
       {
         Header: "Invoice Reference",
         accessor: "invoice_ref",
-        Filter: SelectColumnFilter,
+        Filter: textColumnFilter,
         filter: "includes",
+        Cell: (props) => (
+          <>
+            <CopyToClipboard text={props.value} className="text-center">
+              <ButtonGroup bsClass="btn-group special">
+                <Button >{props.value.toLocaleString()}</Button>
+                <Button bsStyle="warning no-grow">
+                  <Glyphicon glyph="copy" />
+                </Button>
+              </ButtonGroup>
+            </CopyToClipboard>
+          </>
+        ),
       },
       {
         Header: "Amount",
         accessor: "amount",
-        Cell: (props) => <div> {props.value.toLocaleString()} </div>,
+        Cell: (props) => (
+          <>
+            <CopyToClipboard text={props.value} className="text-center">
+              <ButtonGroup bsClass="btn-group special">
+                <Button >{props.value.toLocaleString()}</Button>
+                <Button bsStyle="warning no-grow">
+                  <Glyphicon glyph="copy" />
+                </Button>
+              </ButtonGroup>
+            </CopyToClipboard>
+          </>
+        ),
       },
       {
         Header: "Details",
         accessor: "note",
       },
+      
     ],
     []
   );

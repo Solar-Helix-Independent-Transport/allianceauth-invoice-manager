@@ -1,39 +1,72 @@
 import React from "react";
-import { Panel } from "react-bootstrap";
+import { Button, Panel, Glyphicon, ButtonGroup } from "react-bootstrap";
+
 import { useQuery } from "react-query";
 import { loadUnpaid } from "../apis/Invoices";
-import { BaseTable, SelectColumnFilter } from "../components/BaseTable";
+import { BaseTable, textColumnFilter} from "../components/BaseTable";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const InvUnpaid = () => {
-  const { isLoading, error, data } = useQuery(
-    "unpaid",
-    () => loadUnpaid()
-  );
+  const { isLoading, error, data } = useQuery("unpaid", () => loadUnpaid());
 
+  function getRowProps(row) {
+    let now = new Date();
+    let comp = new Date(row.values.due_date);
+    console.log("Checking " + now + " " + comp);
+    if (comp < now) {
+      console.log("EXPIRED " + now + " " + comp);
+      return {
+        className: "danger",
+      };
+    }
+  }
 
   const columns = React.useMemo(
     () => [
       {
         Header: "Character",
         accessor: "character.character_name",
-        Filter: SelectColumnFilter,
+        Filter: textColumnFilter,
         filter: "includes",
       },
       {
         Header: "Due Date",
         accessor: "due_date",
-        Cell: (props) => <div> {new Date(props.value).toLocaleString()} </div>,
+        Cell: (props) => <> {new Date(props.value).toLocaleString()} </>,
       },
       {
         Header: "Invoice Reference",
         accessor: "invoice_ref",
-        Filter: SelectColumnFilter,
+        Filter: textColumnFilter,
         filter: "includes",
+        Cell: (props) => (
+          <>
+            <CopyToClipboard text={props.value} className="text-center">
+              <ButtonGroup bsClass="btn-group special">
+                <Button >{props.value.toLocaleString()}</Button>
+                <Button bsStyle="warning no-grow">
+                  <Glyphicon glyph="copy" />
+                </Button>
+              </ButtonGroup>
+            </CopyToClipboard>
+          </>
+        ),
       },
       {
         Header: "Amount",
         accessor: "amount",
-        Cell: (props) => <div> {props.value.toLocaleString()} </div>,
+        Cell: (props) => (
+          <>
+            <CopyToClipboard text={props.value} className="text-center">
+              <ButtonGroup bsClass="btn-group special">
+                <Button >{props.value.toLocaleString()}</Button>
+                <Button bsStyle="warning no-grow">
+                  <Glyphicon glyph="copy" />
+                </Button>
+              </ButtonGroup>
+            </CopyToClipboard>
+          </>
+        ),
       },
       {
         Header: "Details",
@@ -45,12 +78,10 @@ const InvUnpaid = () => {
 
   return (
     <Panel>
-        <Panel.Heading>
-            Your Contributions
-        </Panel.Heading>
-        <Panel.Body>
-            <BaseTable {...{ isLoading, data, columns, error }} />
-        </Panel.Body>
+      <Panel.Heading>Your Contributions</Panel.Heading>
+      <Panel.Body>
+        <BaseTable {...{ isLoading, data, columns, error, getRowProps }} />
+      </Panel.Body>
     </Panel>
   );
 };

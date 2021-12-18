@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import { useTable, useFilters, usePagination } from "react-table";
 import Select from "react-select";
 import { Bars } from "@agney/react-loading";
+import matchSorter from 'match-sorter'
 
 import {
   ButtonToolbar,
@@ -20,6 +21,23 @@ function DefaultColumnFilter({
   return <></>;
 }
 
+
+export function textColumnFilter({
+  column: { filterValue, preFilteredRows, setFilter },
+}) {
+  const count = preFilteredRows.length
+
+  return (
+    <input 
+      class="form-control"
+      value={filterValue || ''}
+      onChange={e => {
+        setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
+      }}
+      placeholder={`Search ${count} records...`}
+    />
+  )
+}
 
 // This is a custom filter UI for selecting
 // a unique option from a list
@@ -53,10 +71,11 @@ export function SelectColumnFilter({
   );
 }
 
-export const BaseTable = ({ isLoading, data, error, columns, rowStyleFilter }) => {
+const defaultPropGetter = () => ({})
+
+export const BaseTable = ({ isLoading, data, error, columns, getRowProps = defaultPropGetter}) => {
   
   if (isLoading) return <div class="col-xs-12 text-center"><Bars className="spinner-size" /></div>;
-
   const defaultColumn = React.useMemo(
     () => ({
       // Let's set up our default Filter UI
@@ -114,10 +133,10 @@ export const BaseTable = ({ isLoading, data, error, columns, rowStyleFilter }) =
           {page.map((row, i) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps(getRowProps(row))}>
                 {row.cells.map((cell) => {
                   return (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    <td style={{verticalAlign: "middle"}} {...cell.getCellProps()}>{cell.render("Cell")}</td>
                   );
                 })}
               </tr>

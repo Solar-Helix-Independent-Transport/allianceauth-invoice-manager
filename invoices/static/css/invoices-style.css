@@ -102,6 +102,9 @@
   background-clip: padding-box;
 }
 
+table tbbody tr td {
+  vertical-align: middle !important;
+}
 .no-wrap {
   white-space: nowrap;
 }
@@ -123,3 +126,16 @@
     display: none;
   }
 }
+
+.btn-group.special {
+  display: flex;
+}
+
+.special .btn {
+  flex: 1
+}
+
+.no-grow {
+  flex-grow: 0 !important
+}
+
