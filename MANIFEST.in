@@ -1,2 +1,3 @@
 recursive-include invoices/templates *
+recursive-include invoices/static *
 recursive-include invoices/ *.py
