@@ -132,10 +132,15 @@ table tbbody tr td {
 }
 
 .special .btn {
-  flex: 1
+  flex: 1;
+  color: inherit;
+  border: 1px solid #f0ad4e;
+  background-color: transparent;
 }
 
 .no-grow {
-  flex-grow: 0 !important
+  flex-grow: 0 !important;
+  background: #f0ad4e !important;
+  color: white;
 }
 

@@ -12,9 +12,7 @@ const InvUnpaid = () => {
   function getRowProps(row) {
     let now = new Date();
     let comp = new Date(row.values.due_date);
-    console.log("Checking " + now + " " + comp);
     if (comp < now) {
-      console.log("EXPIRED " + now + " " + comp);
       return {
         className: "danger",
       };
@@ -44,7 +42,7 @@ const InvUnpaid = () => {
             <CopyToClipboard text={props.value} className="text-center">
               <ButtonGroup bsClass="btn-group special">
                 <Button >{props.value.toLocaleString()}</Button>
-                <Button bsStyle="warning no-grow">
+                <Button bsClass="btn no-grow btn-warning">
                   <Glyphicon glyph="copy" />
                 </Button>
               </ButtonGroup>
@@ -60,7 +58,7 @@ const InvUnpaid = () => {
             <CopyToClipboard text={props.value} className="text-center">
               <ButtonGroup bsClass="btn-group special">
                 <Button >{props.value.toLocaleString()}</Button>
-                <Button bsStyle="warning no-grow">
+                <Button bsClass="btn no-grow btn-warning">
                   <Glyphicon glyph="copy" />
                 </Button>
               </ButtonGroup>

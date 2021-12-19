@@ -36,7 +36,7 @@ const InvVisible = () => {
             <CopyToClipboard text={props.value} className="text-center">
               <ButtonGroup bsClass="btn-group special">
                 <Button >{props.value.toLocaleString()}</Button>
-                <Button bsStyle="warning no-grow">
+                <Button bsClass="btn no-grow btn-warning">
                   <Glyphicon glyph="copy" />
                 </Button>
               </ButtonGroup>
@@ -52,7 +52,7 @@ const InvVisible = () => {
             <CopyToClipboard text={props.value} className="text-center">
               <ButtonGroup bsClass="btn-group special">
                 <Button >{props.value.toLocaleString()}</Button>
-                <Button bsStyle="warning no-grow">
+                <Button bsClass="btn no-grow btn-warning">
                   <Glyphicon glyph="copy" />
                 </Button>
               </ButtonGroup>

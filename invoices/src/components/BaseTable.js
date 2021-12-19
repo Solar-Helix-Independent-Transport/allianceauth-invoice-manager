@@ -184,7 +184,6 @@ export const BaseTable = ({ isLoading, data, error, columns, getRowProps = defau
               bsStyle="success"
               title={pageSize}
               onSelect={(e) => {
-                console.log(e);
                 setPageSize(Number(e));
               }}
             >
