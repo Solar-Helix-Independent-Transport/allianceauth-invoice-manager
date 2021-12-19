@@ -19,6 +19,7 @@ class Corporation(Schema):
 
 class Invoice(Schema):
     due_date: datetime
+    paid: bool
     note: str
     invoice_ref: str
     amount: float
