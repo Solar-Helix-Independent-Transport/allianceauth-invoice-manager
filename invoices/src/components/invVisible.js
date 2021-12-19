@@ -1,7 +1,7 @@
 import React from "react";
 import { useQuery } from "react-query";
 import { loadAllVisible } from "../apis/Invoices";
-import { BaseTable, textColumnFilter } from "../components/BaseTable";
+import { BaseTable, textColumnFilter, SelectColumnFilter } from "../components/BaseTable";
 import { PanelLoader } from "./PanelLoader";
 import { Button, Panel, Glyphicon, ButtonGroup } from "react-bootstrap";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -29,6 +29,21 @@ const InvVisible = () => {
         accessor: "character.character_name",
         Filter: textColumnFilter,
         filter: "includes",
+      },
+      {
+        Header: "Corporation",
+        accessor: "character.corporation_name",
+        Filter: SelectColumnFilter,
+        filter: "includes",
+        Cell: (props) => <div style={{whiteSpace: "nowrap"}}> {props.value} </div>,
+      },
+      {
+        Header: "Alliance",
+        accessor: "character.alliance_name",
+        Filter: SelectColumnFilter,
+        filter: "includes",
+        Cell: (props) => <div style={{whiteSpace: "nowrap"}}> {props.value} </div>,
+
       },
       {
         Header: "Due Date",
