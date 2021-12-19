@@ -11,7 +11,10 @@ const InvMenu = () => {
   let amountDue = 0;
   !isLoading
     ? (amountDue = data.reduce((result, filter) => {
-        return result + filter.amount;
+        if (!filter.paid){
+          result = result + filter.amount
+        }
+        return result;
       }, 0))
     : error
     ? (amountDue = "Error")
