@@ -31,12 +31,12 @@ const InvMenu = () => {
               : "danger"
           }
         >
-          <Panel.Heading class="text-center">
-            <h3 class="panel-title">Outstanding</h3>
+          <Panel.Heading className="text-center">
+            <h3 className="panel-title">Outstanding</h3>
           </Panel.Heading>
           <Panel.Body>
             <Col sm={12}>
-              <h3 class="text-center">
+              <h3 className="text-center">
                 {isLoading ? (
                   <Bars
                     style={{ margin: "0px", height: "24px" }}
@@ -54,23 +54,23 @@ const InvMenu = () => {
         </Panel>
       </Col>
       <Col md={4}>
-        <div class="panel panel-default">
-          <div class="panel-heading text-center">
-            <h3 class="panel-title">Key</h3>
+        <div className="panel panel-default">
+          <div className="panel-heading text-center">
+            <h3 className="panel-title">Key</h3>
           </div>
-          <div class="panel-body">
+          <div className="panel-body">
             <table
-              class="table table-hover text-center"
+              className="table table-hover text-center"
               style={{ width: "100%" }}
             >
               <tbody>
-                <tr class="info">
+                <tr className="info">
                   <td>Paid</td>
                 </tr>
-                <tr class="">
+                <tr className="">
                   <td>Outstanding</td>
                 </tr>
-                <tr class="danger">
+                <tr className="danger">
                   <td>Overdue</td>
                 </tr>
               </tbody>

@@ -29,7 +29,7 @@ export function textColumnFilter({
 
   return (
     <input 
-      class="form-control"
+      className="form-control"
       value={filterValue || ''}
       onChange={e => {
         setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
@@ -75,7 +75,7 @@ const defaultPropGetter = () => ({})
 
 export const BaseTable = ({ isLoading, data, error, columns, getRowProps = defaultPropGetter}) => {
   
-  if (isLoading) return <div class="col-xs-12 text-center"><Bars className="spinner-size" /></div>;
+  if (isLoading) return <div className="col-xs-12 text-center"><Bars className="spinner-size" /></div>;
   const defaultColumn = React.useMemo(
     () => ({
       // Let's set up our default Filter UI

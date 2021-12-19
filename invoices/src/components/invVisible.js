@@ -12,6 +12,15 @@ const InvVisible = () => {
     () => loadAllVisible()
   );
 
+  function getRowProps(row) {
+    let now = new Date();
+    let comp = new Date(row.values.due_date);
+    if (comp < now) {
+      return {
+        className: "danger",
+      };
+    }
+  }
 
   const columns = React.useMemo(
     () => [
@@ -77,7 +86,7 @@ const InvVisible = () => {
                 Visible Contributions
             </Panel.Heading>
             <Panel.Body>
-                <BaseTable {...{ isLoading, data, columns, error }} />
+                <BaseTable {...{ isLoading, data, columns, error, getRowProps }} />
             </Panel.Body>
         </Panel>
       ) : (

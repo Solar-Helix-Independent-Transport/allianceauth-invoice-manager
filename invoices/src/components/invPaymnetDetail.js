@@ -10,16 +10,16 @@ const invPaymentDetail = () => {
 
   return (
     <>
-    <div class="col-sm-6">
-        <p class="text-center"><small>All Payments are to be made to {isLoading ? (
+    <div className="col-sm-6">
+        <p className="text-center"><small>All Payments are to be made to {isLoading ? (
             <> </>
             ):(
             <a href={"https://evewho.com/corporation/"+ data.corporation_id }>{data.corporation_name}</a>
             )
         }<br/>All payments made to other places will not be receipted!</small></p>
     </div>
-    <div class="col-sm-6">
-        <p class="text-center"><small>All Payments <b>MUST</b> include the Reference in the Reason Field<br/>Contact an Admin for assistance, if you made an error</small></p>
+    <div className="col-sm-6">
+        <p className="text-center"><small>All Payments <b>MUST</b> include the Reference in the Reason Field<br/>Contact an Admin for assistance, if you made an error</small></p>
     </div>
     </>
   );
