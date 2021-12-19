@@ -33,18 +33,6 @@ const InvUnpaid = () => {
         accessor: "character.character_name",
         Filter: textColumnFilter,
         filter: "includes",
-                Cell: (props) => (
-          <>
-            <CopyToClipboard text={props.value} className="text-center">
-              <ButtonGroup bsClass="btn-group special">
-                <Button >{props.value.toLocaleString()}</Button>
-                <Button bsClass="btn no-grow btn-warning">
-                  <Glyphicon glyph="copy" />
-                </Button>
-              </ButtonGroup>
-            </CopyToClipboard>
-          </>
-        ),
 
       },
       {
