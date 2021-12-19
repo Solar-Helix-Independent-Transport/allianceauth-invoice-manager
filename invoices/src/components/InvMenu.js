@@ -42,8 +42,9 @@ const InvMenu = () => {
                     style={{ margin: "0px", height: "24px" }}
                     className="spinner-size"
                   />
-                ) : (
-                  <>Ƶ {amountDue.toLocaleString()}</>
+                ) : (<>{
+                  amountDue > 0 ? <>Ƶ {amountDue.toLocaleString()}</> : <>No Payment Required</>
+                }</>
                 )}
               </h3>
               <br />
