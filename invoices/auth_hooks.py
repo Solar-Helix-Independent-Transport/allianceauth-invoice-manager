@@ -11,7 +11,7 @@ class Invoices(MenuItemHook):
         MenuItemHook.__init__(self,
                               app_settings.INVOICES_APP_NAME,
                               'fas fa-file-invoice-dollar fa-fw',
-                              'invoices:list',
+                              'invoices:r_list',
                               navactive=['invoices:'])
 
     def render(self, request):

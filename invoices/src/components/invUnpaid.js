@@ -30,7 +30,7 @@ const InvUnpaid = () => {
       {
         Header: "Due Date",
         accessor: "due_date",
-        Cell: (props) => <> {new Date(props.value).toLocaleString()} </>,
+        Cell: (props) => <div style="white-space: nowrap;"> {new Date(props.value).toLocaleString()} </div>,
       },
       {
         Header: "Invoice Reference",
