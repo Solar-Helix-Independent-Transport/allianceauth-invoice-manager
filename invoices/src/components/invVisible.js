@@ -24,7 +24,7 @@ const InvVisible = () => {
       {
         Header: "Due Date",
         accessor: "due_date",
-        Cell: (props) => <div> {new Date(props.value).toLocaleString()} </div>,
+        Cell: (props) => <div style={{whiteSpace: "nowrap"}}> {new Date(props.value).toLocaleString()} </div>,
       },
       {
         Header: "Invoice Reference",
