@@ -6,6 +6,10 @@ from typing import Optional, List, Dict
 class Message(Schema):
     message: str
 
+class WalletEvent(Schema):
+    amount: int
+    date: datetime
+
 class Character(Schema):
     character_name: str
     corporation_name: str
@@ -24,3 +28,4 @@ class Invoice(Schema):
     invoice_ref: str
     amount: float
     character: Character
+    payment: Optional[WalletEvent]

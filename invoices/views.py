@@ -13,6 +13,8 @@ from django_celery_beat.models import CrontabSchedule, PeriodicTask
 
 from .models import Invoice
 
+from . import __version__
+
 @login_required
 def show_invoices(request):
     try:
@@ -100,4 +102,5 @@ def admin_create_tasks(request):
 @login_required
 def react_main(request):
     # get available models
-    return render(request, 'invoices/react_base.html')
+    ctx = {"js_import": "invoices/invoices-main-" + __version__.replace(".", "-") + ".js"}
+    return render(request, 'invoices/react_base.html', context=ctx)

@@ -7,10 +7,14 @@
 {% endblock %} {% block content %}
 <noscript>You need to enable JavaScript to run this app.</noscript>
 <br />
-<div id="app"></div>
 
-{% endblock %} {% block extra_javascript %}
+<div id="app">
+    <div class="text-center">
+        <div class="text-center spinner-size lds-ripple" style="margin-bottom: 0px;"><div></div><div></div></div>
+        <h5>Loading....</h5>
+    </div>
+</div>{% endblock %} {% block extra_javascript %}
 <!-- Load React. -->
-<script src="{% static 'invoices/invoices-main.js' %}"></script>
+<script src="{% static js_import %}"></script>
 
 {% endblock %}
