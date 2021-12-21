@@ -49,7 +49,7 @@ const InvUnpaid = () => {
           <>
             <CopyToClipboard text={props.value} className="text-center">
               <ButtonGroup bsClass="btn-group special">
-                <Button >{props.value.toLocaleString()}</Button>
+                <Button disabled={props.row.values.paid}>{props.value.toLocaleString()}</Button>
                 <Button disabled={props.row.values.paid} bsClass="btn no-grow btn-warning">
                   <Glyphicon glyph="copy" />
                 </Button>
@@ -65,7 +65,7 @@ const InvUnpaid = () => {
           <>
             <CopyToClipboard text={props.value} className="text-center">
               <ButtonGroup bsClass="btn-group special">
-                <Button >{props.value.toLocaleString()}</Button>
+                <Button disabled={props.row.values.paid}>{props.value.toLocaleString()}</Button>
                 <Button disabled={props.row.values.paid} bsClass="btn no-grow btn-warning">
                   <Glyphicon glyph="copy" />
                 </Button>
