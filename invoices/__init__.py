@@ -1,2 +1,2 @@
 default_app_config = 'invoices.apps.InvoicesConfig'
-__version__ = "0.0.6"
+__version__ = "0.0.7"

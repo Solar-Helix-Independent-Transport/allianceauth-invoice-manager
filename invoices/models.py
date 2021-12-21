@@ -2,13 +2,14 @@ from django.db import models
 from allianceauth.eveonline.models import EveCharacter
 from allianceauth.notifications import notify as auth_notify
 from corptools.models import CorporationWalletJournalEntry
+from django.urls import reverse
 
 from . import app_settings
 from .managers import InvoiceManager
 from django.utils import timezone
 
 if app_settings.discord_bot_active():
-    import aadiscordbot
+    from aadiscordbot import tasks as bot_tasks
 
 import logging
 logger = logging.getLogger(__name__)
@@ -36,15 +37,18 @@ class Invoice(models.Model):
         return timezone.now() > self.due_date
 
     def notify(self, message, title="Contributions Bot Message"):
+        url = reverse("invoices:r_list")
         u = self.character.character_ownership.user
-        message = "Invoice:{} Ƶ{:.2f}\n{}".format(
+        message = "Invoice:{} Ƶ{:.2f}\n{}\n{}{}".format(
             self.invoice_ref,
             self.amount,
-            message
+            message,
+            app_settings.get_site_url(),
+            url
         )
         if app_settings.discord_bot_active(): 
             try:
-                aadiscordbot.tasks.send_direct_message.delay(u.discord.uid, message)
+                bot_tasks.send_direct_message.delay(u.discord.uid, message)
             except Exception as e:
                 logger.error(e, exc_info=True)
                 pass

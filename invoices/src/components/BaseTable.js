@@ -14,6 +14,15 @@ import {
   Table,
 } from "react-bootstrap";
 
+const colourStyles = {
+  option: (styles) => {
+    return {
+      ...styles,
+      color: "black"
+    };
+  },
+};
+
 // Define a default UI for filtering
 function DefaultColumnFilter({
   column: { filterValue, preFilteredRows, setFilter },
@@ -62,6 +71,7 @@ export function SelectColumnFilter({
       onChange={(e) => setFilter(e.value)}
       value={{ label: filterValue || "All" }}
       defaultValue={{ label: "All" }}
+      styles={colourStyles}
       options={[{ id: -1, value: "", label: "All" }].concat(
         options.map((o, i) => {
           return { id: i, value: o, label: o };

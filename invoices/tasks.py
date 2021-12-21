@@ -59,7 +59,7 @@ def check_for_outstanding(self):
     invoices = invoices.filter(notified__isnull=True, due_date__lte=date_future) | invoices.filter(notified__lte=date_past) 
 
     for inv in invoices:
-        url = reverse("invoices:list")
+        url = reverse("invoices:r_list")
         message = "{} has an outstanding invoice `{}` for ${}\n{}See auth for more info\n{}{}".format(
             inv.character.character_name,
             inv.invoice_ref,
