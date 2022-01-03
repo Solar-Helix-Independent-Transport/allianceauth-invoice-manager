@@ -12,7 +12,7 @@ from allianceauth.services.tasks import QueueOnce
 from allianceauth.notifications import notify
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.db.utils import IntegrityError
 if app_settings.discord_bot_active():
     import aadiscordbot.tasks
 
@@ -41,14 +41,20 @@ def check_for_payments(self):
             payment_totals = 0
             for p in payment_dict[invoice.invoice_ref]:
                 payment_totals += p.amount
-            
             if payment_totals >= invoice.amount:
                 logger.info("Payed! {}".format(invoice.invoice_ref))
-                invoice.paid = True
-                invoice.payment = payment_dict[invoice.invoice_ref][0]
-                invoice.save()
-                invoice.notify("Payment Received", "Paid")
- 
+                try:
+                    invoice.paid = True
+                    invoice.payment = payment_dict[invoice.invoice_ref][0]
+                    invoice.save()
+                    invoice.notify("Payment Received", "Paid")
+                except IntegrityError:
+                    invoice.paid = True
+                    invoice.payment = None
+                    invoice.save()
+                    invoice.notify("Payment Received", "Paid")
+
+
 @shared_task(bind=True, base=QueueOnce)
 def check_for_outstanding(self):
     logger.info("Checking for outstanding invoices")
