@@ -66,29 +66,13 @@ def check_for_outstanding(self):
 
     for inv in invoices:
         url = reverse("invoices:r_list")
-        message = "{} has an outstanding invoice `{}` for ${}\n{}See auth for more info\n{}{}".format(
-            inv.character.character_name,
-            inv.invoice_ref,
-            inv.amount,
-            f"Note: {inv.note}\n" if inv.note else "",
-            app_settings.get_site_url(),
-            url
-        )
-        if app_settings.discord_bot_active():
-            try:
-                logger.debug("sending discord ping to {}".format(inv.character.character_name))
-                aadiscordbot.tasks.send_direct_message.delay(inv.character.character_ownership.user.discord.uid, message)
-            except Exception as e:
-                #logger.error(e, exc_info=True)
-                pass
+        message = "Please check auth for more info"
+        if inv.is_past_due:
+            title = "Overdue Contribution"
+        else:
+            title = "Unpaid Contribution"
         try:
-            notify(
-                inv.character.character_ownership.user, 
-                f'Outstanding Invoice! "{inv.invoice_ref}"',
-                message,
-                'warning'
-            )
-            logger.info(message)
+            inv.notify(message, title=title)
             inv.notified = timezone.now()
             inv.save()
         except ObjectDoesNotExist:

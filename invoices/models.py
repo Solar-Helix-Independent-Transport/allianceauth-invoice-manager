@@ -8,8 +8,10 @@ from . import app_settings
 from .managers import InvoiceManager
 from django.utils import timezone
 
+
 if app_settings.discord_bot_active():
     from aadiscordbot import tasks as bot_tasks
+    from discord import Embed, Color
 
 import logging
 logger = logging.getLogger(__name__)
@@ -37,21 +39,36 @@ class Invoice(models.Model):
         return timezone.now() > self.due_date
 
     def notify(self, message, title="Contributions Bot Message"):
-        url = reverse("invoices:r_list")
+        url = f"{app_settings.get_site_url()}{reverse('invoices:r_list')}"
         u = self.character.character_ownership.user
-        message = "Invoice:{} Ƶ{:.2f}\n{}\n{}{}".format(
-            self.invoice_ref,
-            self.amount,
-            message,
-            app_settings.get_site_url(),
-            url
-        )
-        if app_settings.discord_bot_active(): 
+        if app_settings.discord_bot_active():
             try:
-                bot_tasks.send_direct_message.delay(u.discord.uid, message)
+                if self.paid:
+                    color=Color.green()
+                elif self.is_past_due:
+                    color=Color.red()
+                else:
+                    color=Color.blue()
+                    
+                e = Embed(title=title,
+                          description=message,
+                          url=url,
+                          color=color)
+                e.add_field(name="Amount", value=f"${self.amount:,}", inline=False)
+                e.add_field(name="Reference", value=self.invoice_ref, inline=False)
+                e.add_field(name="Due Date", value=self.due_date.strftime("%Y/%m/%d"), inline=False)
+
+                bot_tasks.send_message(user_id=u.discord.uid,
+                                       embed=e)
             except Exception as e:
                 logger.error(e, exc_info=True)
                 pass
+        message = "Invoice:{} Ƶ{:.2f}\n{}\n{}".format(
+            self.invoice_ref,
+            self.amount,
+            message,
+            url
+        )
         auth_notify(
             u, 
             title,
