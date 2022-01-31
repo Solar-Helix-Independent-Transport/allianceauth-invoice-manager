@@ -2,7 +2,6 @@ import React from "react";
 import { useQuery } from "react-query";
 import { loadAllVisible } from "../apis/Invoices";
 import { BaseTable, textColumnFilter, SelectColumnFilter } from "../components/BaseTable";
-import { PanelLoader } from "./PanelLoader";
 import { Button, Panel, Glyphicon, ButtonGroup } from "react-bootstrap";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
@@ -41,7 +40,7 @@ const InvVisible = () => {
         Header: "Alliance",
         accessor: "character.alliance_name",
         Filter: SelectColumnFilter,
-        filter: "includes",
+        filter: "text",
         Cell: (props) => <div style={{whiteSpace: "nowrap"}}> {props.value} </div>,
 
       },

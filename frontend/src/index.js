@@ -1,15 +1,15 @@
 import TimeAgo from "javascript-time-ago";
-
 import en from "javascript-time-ago/locale/en";
-
-TimeAgo.addDefaultLocale(en);
 import React from "react";
 import { render } from "react-dom";
 import InvHeader from "./components/InvHeader";
 import InvMenu from "./components/InvMenu";
 import { QueryClient, QueryClientProvider } from "react-query";
-import InvUnpaid from "./components/invUnpaid";
-import InvVisible from "./components/invVisible";
+import InvUnpaid from "./components/InvUnpaid";
+import InvVisible from "./components/InvVisible";
+import './index.css';
+
+TimeAgo.addDefaultLocale(en);
 
 const queryClient = new QueryClient();
 
@@ -25,5 +25,5 @@ const InvoicesView = () => {
   );
 };
 
-const appDiv = document.getElementById("app");
+const appDiv = document.getElementById("root");
 render(<InvoicesView />, appDiv);

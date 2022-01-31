@@ -2,7 +2,7 @@ import React from "react";
 import { useQuery } from "react-query";
 import { loadUnpaid } from "../apis/Invoices";
 import { Bars } from "@agney/react-loading";
-import invPaymentDetail from "./invPaymnetDetail";
+import InvPaymentDetail from "./InvPaymnetDetail";
 import { Col, Row } from "react-bootstrap";
 import { Panel } from "react-bootstrap";
 
@@ -51,7 +51,7 @@ const InvMenu = () => {
                 )}
               </h3>
               <br />
-              {invPaymentDetail()}
+              {InvPaymentDetail()}
             </Col>
           </Panel.Body>
         </Panel>

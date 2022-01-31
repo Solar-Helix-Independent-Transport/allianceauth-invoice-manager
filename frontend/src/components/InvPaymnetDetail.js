@@ -1,9 +1,8 @@
 import React from "react";
 import { useQuery } from "react-query";
-import { loadUnpaid, loadPaymentCorp } from "../apis/Invoices";
-import { Bars } from "@agney/react-loading";
+import { loadPaymentCorp } from "../apis/Invoices";
 
-const invPaymentDetail = () => {
+const InvPaymentDetail = () => {
   const { isLoading, error, data } = useQuery(["payment_corp"], () =>
     loadPaymentCorp()
   );
@@ -11,7 +10,7 @@ const invPaymentDetail = () => {
   return (
     <>
     <div className="col-sm-6">
-        <p className="text-center"><small>All Payments are to be made to {isLoading ? (
+        <p className="text-center"><small>All Payments are to be made to {isLoading | error ? (
             <> </>
             ):(
             <a href={"https://evewho.com/corporation/"+ data.corporation_id }>{data.corporation_name}</a>
@@ -25,4 +24,4 @@ const invPaymentDetail = () => {
   );
 };
 
-export default invPaymentDetail;
+export default InvPaymentDetail;
