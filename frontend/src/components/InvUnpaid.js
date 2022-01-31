@@ -7,7 +7,7 @@ import { BaseTable, textColumnFilter} from "./BaseTable";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const InvUnpaid = () => {
-  const { isLoading, error, data } = useQuery("unpaid", () => loadUnpaid(), []);
+  const { isLoading, error, data } = useQuery("unpaid", () => loadUnpaid(), {initialData: []});
 
   function getRowProps(row) {
     console.log(row.values);
@@ -107,7 +107,11 @@ const InvUnpaid = () => {
     <Panel>
       <Panel.Heading>Your Contributions</Panel.Heading>
       <Panel.Body>
-        <BaseTable {...{ isLoading, data, columns, error, getRowProps }} />
+        {!isLoading ? (
+          <BaseTable {...{ isLoading, data, columns, error, getRowProps }} />
+        ):(
+          <></>
+        )}
       </Panel.Body>
     </Panel>
   );

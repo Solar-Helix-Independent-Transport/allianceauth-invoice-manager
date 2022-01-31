@@ -7,6 +7,7 @@ import InvMenu from "./components/InvMenu";
 import { QueryClient, QueryClientProvider } from "react-query";
 import InvUnpaid from "./components/InvUnpaid";
 import InvVisible from "./components/InvVisible";
+import './index.css';
 
 TimeAgo.addDefaultLocale(en);
 

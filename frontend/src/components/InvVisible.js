@@ -8,7 +8,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 const InvVisible = () => {
   const { isLoading, error, data } = useQuery(
     "visible",
-    () => loadAllVisible(), []
+    () => loadAllVisible()
   );
 
   function getRowProps(row) {
@@ -40,7 +40,7 @@ const InvVisible = () => {
         Header: "Alliance",
         accessor: "character.alliance_name",
         Filter: SelectColumnFilter,
-        filter: "includes",
+        filter: "text",
         Cell: (props) => <div style={{whiteSpace: "nowrap"}}> {props.value} </div>,
 
       },
