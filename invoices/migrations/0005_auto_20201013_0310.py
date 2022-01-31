@@ -12,6 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='invoice',
-            options={'permissions': (('view_corp', 'Can View Own Corps Invoices'), ('view_alliance', 'Can View Own Alliances Invoices'), ('view_all', 'Can View All Invoices'), ('access_invoices', 'Can Access the Invoice App'))},
+            options={'permissions': (('view_corp', 'Can View Own Corps Invoices'), ('view_alliance', 'Can View Own Alliances Invoices'), (
+                'view_all', 'Can View All Invoices'), ('access_invoices', 'Can Access the Invoice App'))},
         ),
     ]

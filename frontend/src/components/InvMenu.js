@@ -11,8 +11,8 @@ const InvMenu = () => {
   let amountDue = 0;
   !isLoading
     ? (amountDue = data.reduce((result, filter) => {
-        if (!filter.paid){
-          result = result + filter.amount
+        if (!filter.paid) {
+          result = result + filter.amount;
         }
         return result;
       }, 0))
@@ -45,9 +45,14 @@ const InvMenu = () => {
                     style={{ margin: "0px", height: "24px" }}
                     className="spinner-size"
                   />
-                ) : (<>{
-                  amountDue > 0 ? <>Ƶ {amountDue.toLocaleString()}</> : <>No Payment Required</>
-                }</>
+                ) : (
+                  <>
+                    {amountDue > 0 ? (
+                      <>Ƶ {amountDue.toLocaleString()}</>
+                    ) : (
+                      <>No Payment Required</>
+                    )}
+                  </>
                 )}
               </h3>
               <br />

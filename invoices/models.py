@@ -16,18 +16,22 @@ if app_settings.discord_bot_active():
 import logging
 logger = logging.getLogger(__name__)
 
+
 class Invoice(models.Model):
 
     objects = InvoiceManager()
 
-    character = models.ForeignKey(EveCharacter, null=True, default=None, on_delete=models.SET_NULL, related_name='invoices')
-    amount = models.DecimalField(max_digits=20, decimal_places=2, null=True, default=None)
+    character = models.ForeignKey(
+        EveCharacter, null=True, default=None, on_delete=models.SET_NULL, related_name='invoices')
+    amount = models.DecimalField(
+        max_digits=20, decimal_places=2, null=True, default=None)
     invoice_ref = models.CharField(max_length=72)
-    due_date= models.DateTimeField()
+    due_date = models.DateTimeField()
     notified = models.DateTimeField(null=True, default=None, blank=True)
 
     paid = models.BooleanField(default=False, blank=True)
-    payment = models.OneToOneField(CorporationWalletJournalEntry, blank=True, null=True, default=None, on_delete=models.SET_NULL, related_name='invoice')
+    payment = models.OneToOneField(CorporationWalletJournalEntry, blank=True,
+                                   null=True, default=None, on_delete=models.SET_NULL, related_name='invoice')
 
     note = models.TextField(blank=True, null=True, default=None,)
 
@@ -44,19 +48,22 @@ class Invoice(models.Model):
         if app_settings.discord_bot_active():
             try:
                 if self.paid:
-                    color=Color.green()
+                    color = Color.green()
                 elif self.is_past_due:
-                    color=Color.red()
+                    color = Color.red()
                 else:
-                    color=Color.blue()
-                    
+                    color = Color.blue()
+
                 e = Embed(title=title,
                           description=message,
                           url=url,
                           color=color)
-                e.add_field(name="Amount", value=f"${self.amount:,}", inline=False)
-                e.add_field(name="Reference", value=self.invoice_ref, inline=False)
-                e.add_field(name="Due Date", value=self.due_date.strftime("%Y/%m/%d"), inline=False)
+                e.add_field(name="Amount",
+                            value=f"${self.amount:,}", inline=False)
+                e.add_field(name="Reference",
+                            value=self.invoice_ref, inline=False)
+                e.add_field(name="Due Date", value=self.due_date.strftime(
+                    "%Y/%m/%d"), inline=False)
 
                 bot_tasks.send_message(user_id=u.discord.uid,
                                        embed=e)
@@ -70,7 +77,7 @@ class Invoice(models.Model):
             url
         )
         auth_notify(
-            u, 
+            u,
             title,
             message,
             'info'
@@ -81,4 +88,4 @@ class Invoice(models.Model):
                        ('view_alliance', 'Can View Own Alliances Invoices'),
                        ('view_all', 'Can View All Invoices'),
                        ('access_invoices', 'Can Access the Invoice App')
-                      )
+                       )

@@ -1,14 +1,17 @@
 import React from "react";
 import { useQuery } from "react-query";
 import { loadAllVisible } from "../apis/Invoices";
-import { BaseTable, textColumnFilter, SelectColumnFilter } from "../components/BaseTable";
+import {
+  BaseTable,
+  textColumnFilter,
+  SelectColumnFilter,
+} from "../components/BaseTable";
 import { Button, Panel, Glyphicon, ButtonGroup } from "react-bootstrap";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const InvVisible = () => {
-  const { isLoading, error, data } = useQuery(
-    "visible",
-    () => loadAllVisible()
+  const { isLoading, error, data } = useQuery("visible", () =>
+    loadAllVisible()
   );
 
   function getRowProps(row) {
@@ -34,20 +37,28 @@ const InvVisible = () => {
         accessor: "character.corporation_name",
         Filter: SelectColumnFilter,
         filter: "includes",
-        Cell: (props) => <div style={{whiteSpace: "nowrap"}}> {props.value} </div>,
+        Cell: (props) => (
+          <div style={{ whiteSpace: "nowrap" }}> {props.value} </div>
+        ),
       },
       {
         Header: "Alliance",
         accessor: "character.alliance_name",
         Filter: SelectColumnFilter,
         filter: "text",
-        Cell: (props) => <div style={{whiteSpace: "nowrap"}}> {props.value} </div>,
-
+        Cell: (props) => (
+          <div style={{ whiteSpace: "nowrap" }}> {props.value} </div>
+        ),
       },
       {
         Header: "Due Date",
         accessor: "due_date",
-        Cell: (props) => <div style={{whiteSpace: "nowrap"}}> {new Date(props.value).toLocaleString()} </div>,
+        Cell: (props) => (
+          <div style={{ whiteSpace: "nowrap" }}>
+            {" "}
+            {new Date(props.value).toLocaleString()}{" "}
+          </div>
+        ),
       },
       {
         Header: "Invoice Reference",
@@ -58,7 +69,7 @@ const InvVisible = () => {
           <>
             <CopyToClipboard text={props.value} className="text-center">
               <ButtonGroup bsClass="btn-group special">
-                <Button >{props.value.toLocaleString()}</Button>
+                <Button>{props.value.toLocaleString()}</Button>
                 <Button bsClass="btn no-grow btn-warning">
                   <Glyphicon glyph="copy" />
                 </Button>
@@ -74,7 +85,7 @@ const InvVisible = () => {
           <>
             <CopyToClipboard text={props.value} className="text-center">
               <ButtonGroup bsClass="btn-group special">
-                <Button >{props.value.toLocaleString()}</Button>
+                <Button>{props.value.toLocaleString()}</Button>
                 <Button bsClass="btn no-grow btn-warning">
                   <Glyphicon glyph="copy" />
                 </Button>
@@ -87,27 +98,23 @@ const InvVisible = () => {
         Header: "Details",
         accessor: "note",
       },
-      
     ],
     []
   );
 
   return (
     <>
-    {!isLoading ? (
+      {!isLoading ? (
         <Panel>
-            <Panel.Heading>
-                Visible Contributions
-            </Panel.Heading>
-            <Panel.Body>
-                <BaseTable {...{ isLoading, data, columns, error, getRowProps }} />
-            </Panel.Body>
+          <Panel.Heading>Visible Contributions</Panel.Heading>
+          <Panel.Body>
+            <BaseTable {...{ isLoading, data, columns, error, getRowProps }} />
+          </Panel.Body>
         </Panel>
       ) : (
         <></>
-      )
-    }
+      )}
     </>
-    );
-  };
+  );
+};
 export default InvVisible;

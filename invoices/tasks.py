@@ -1,5 +1,5 @@
 import logging
-import os 
+import os
 
 from celery import shared_task
 from allianceauth.eveonline.models import EveCharacter, EveCorporationInfo, EveAllianceInfo
@@ -17,6 +17,7 @@ if app_settings.discord_bot_active():
     import aadiscordbot.tasks
 
 logger = logging.getLogger(__name__)
+
 
 @shared_task(bind=True, base=QueueOnce)
 def check_for_payments(self):
@@ -62,7 +63,8 @@ def check_for_outstanding(self):
     invoices = Invoice.objects.filter(paid=False)
     date_future = timezone.now() + timedelta(days=5)
     date_past = timezone.now() - timedelta(days=5)
-    invoices = invoices.filter(notified__isnull=True, due_date__lte=date_future) | invoices.filter(notified__lte=date_past) 
+    invoices = invoices.filter(
+        notified__isnull=True, due_date__lte=date_future) | invoices.filter(notified__lte=date_past)
 
     for inv in invoices:
         url = reverse("invoices:r_list")
@@ -78,4 +80,3 @@ def check_for_outstanding(self):
         except ObjectDoesNotExist:
             pass
         # notify
-
