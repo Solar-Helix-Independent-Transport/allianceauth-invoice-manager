@@ -3,15 +3,18 @@ import { Button, Panel, Glyphicon, ButtonGroup } from "react-bootstrap";
 
 import { useQuery } from "react-query";
 import { loadUnpaid } from "../apis/Invoices";
-import { BaseTable, textColumnFilter} from "./BaseTable";
+import { BaseTable, textColumnFilter } from "./BaseTable";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { Bars } from "@agney/react-loading";
 
 const InvUnpaid = () => {
-  const { isLoading, error, data } = useQuery("unpaid", () => loadUnpaid(), {initialData: []});
+  const { isLoading, error, data } = useQuery("unpaid", () => loadUnpaid(), {
+    initialData: [],
+  });
 
   function getRowProps(row) {
     console.log(row.values);
-    if (row.values.paid === true){
+    if (row.values.paid === true) {
       return {
         className: "info",
       };
@@ -28,17 +31,21 @@ const InvUnpaid = () => {
 
   const columns = React.useMemo(
     () => [
-        {
+      {
         Header: "Character",
         accessor: "character.character_name",
         Filter: textColumnFilter,
         filter: "includes",
-
       },
       {
         Header: "Due Date",
         accessor: "due_date",
-        Cell: (props) => <div style={{whiteSpace: "nowrap"}}> {new Date(props.value).toLocaleString()} </div>,
+        Cell: (props) => (
+          <div style={{ whiteSpace: "nowrap" }}>
+            {" "}
+            {new Date(props.value).toLocaleString()}{" "}
+          </div>
+        ),
       },
       {
         Header: "Invoice Reference",
@@ -49,8 +56,13 @@ const InvUnpaid = () => {
           <>
             <CopyToClipboard text={props.value} className="text-center">
               <ButtonGroup bsClass="btn-group special">
-                <Button disabled={props.row.values.paid}>{props.value.toLocaleString()}</Button>
-                <Button disabled={props.row.values.paid} bsClass="btn no-grow btn-warning">
+                <Button disabled={props.row.values.paid}>
+                  {props.value.toLocaleString()}
+                </Button>
+                <Button
+                  disabled={props.row.values.paid}
+                  bsClass="btn no-grow btn-warning"
+                >
                   <Glyphicon glyph="copy" />
                 </Button>
               </ButtonGroup>
@@ -65,8 +77,13 @@ const InvUnpaid = () => {
           <>
             <CopyToClipboard text={props.value} className="text-center">
               <ButtonGroup bsClass="btn-group special">
-                <Button disabled={props.row.values.paid}>{props.value.toLocaleString()}</Button>
-                <Button disabled={props.row.values.paid} bsClass="btn no-grow btn-warning">
+                <Button disabled={props.row.values.paid}>
+                  {props.value.toLocaleString()}
+                </Button>
+                <Button
+                  disabled={props.row.values.paid}
+                  bsClass="btn no-grow btn-warning"
+                >
                   <Glyphicon glyph="copy" />
                 </Button>
               </ButtonGroup>
@@ -78,27 +95,25 @@ const InvUnpaid = () => {
         Header: "",
         width: 0,
         accessor: "paid",
-        Cell: (props) =>(
-            !props.value ? (
-              <></>
-              //<Button bsClass="btn btn-danger">
-              //  <Glyphicon glyph="remove" />
-              //</Button>
-             ) : (
-              <></>
+        Cell: (props) =>
+          !props.value ? (
+            <></>
+          ) : (
+            //<Button bsClass="btn btn-danger">
+            //  <Glyphicon glyph="remove" />
+            //</Button>
+            <></>
 
-              //<Button bsClass="btn btn-info">
-               // <Glyphicon glyph="ok" />
-              //</Button>
-             )
+            //<Button bsClass="btn btn-info">
+            // <Glyphicon glyph="ok" />
+            //</Button>
           ),
-        },
+      },
 
       {
         Header: "Details",
         accessor: "note",
       },
-
     ],
     []
   );
@@ -109,8 +124,13 @@ const InvUnpaid = () => {
       <Panel.Body>
         {!isLoading ? (
           <BaseTable {...{ isLoading, data, columns, error, getRowProps }} />
-        ):(
-          <></>
+        ) : (
+          <p className="text-center">
+            <Bars
+              style={{ margin: "200px", height: "24px" }}
+              className="spinner-size"
+            />
+          </p>
         )}
       </Panel.Body>
     </Panel>
