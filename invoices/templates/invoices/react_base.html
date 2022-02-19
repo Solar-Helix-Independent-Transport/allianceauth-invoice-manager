@@ -1,6 +1,8 @@
 {% extends 'allianceauth/base.html' %}
 {% load i18n %}
-{% block page_title %}{% trans "Moons!" %}{% endblock %}
+{% load invoices %}
+
+{% block page_title %}{% invoice_app_name %}{% endblock %}
 {% block extra_javascript %}
 <script type="text/javascript">
     var BASE_URL = '/static/invoices/';
@@ -62,5 +64,28 @@
 {% endblock extra_javascript %}
 
 {% block content %}
+<br>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'invoices:r_list' %}">{% invoice_app_name %}</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                {% if perms.invoices.admin %}
+                 <li><a class="" href="{% url 'invoices:admin' %}">Invoice Managment</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+    </div>
+</nav>
 <div id="root"></div>
 {% endblock content %}

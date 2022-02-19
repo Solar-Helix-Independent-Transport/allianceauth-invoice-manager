@@ -5,5 +5,5 @@ register = template.Library()
 
 
 @register.simple_tag
-def app_name():
+def invoice_app_name():
     return app_sett.INVOICES_APP_NAME
