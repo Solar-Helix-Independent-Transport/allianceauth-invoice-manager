@@ -13,31 +13,39 @@ from django_celery_beat.models import CrontabSchedule, PeriodicTask
 
 from .models import Invoice
 
+from . import __version__
+
+
 @login_required
 def show_invoices(request):
     try:
-        recipt_corp = EveCorporationInfo.objects.get(corporation_id=PAYMENT_CORP)
+        recipt_corp = EveCorporationInfo.objects.get(
+            corporation_id=PAYMENT_CORP)
     except:
         recipt_corp = "None"
     chars = request.user.character_ownerships.all().values_list('character')
-    admin_invoices = Invoice.objects.visible_to(request.user).filter(paid=False).exclude(character__in=chars)
-    invoices = Invoice.objects.visible_to(request.user).filter(paid=False, character__in=chars)
+    admin_invoices = Invoice.objects.visible_to(
+        request.user).filter(paid=False).exclude(character__in=chars)
+    invoices = Invoice.objects.visible_to(
+        request.user).filter(paid=False, character__in=chars)
     outstanding_isk = invoices.aggregate(total_isk=Sum('amount'))
     admin_isk = admin_invoices.aggregate(total_isk=Sum('amount'))
-    completed_invoices = Invoice.objects.visible_to(request.user).filter(paid=True, character__in=chars).order_by('-due_date')[:10]
+    completed_invoices = Invoice.objects.visible_to(request.user).filter(
+        paid=True, character__in=chars).order_by('-due_date')[:10]
     if outstanding_isk['total_isk'] == None:
         outstanding = 0
     else:
         outstanding = outstanding_isk['total_isk']
 
-    ctx = { 'invoices':invoices, 
-            'admin_invoices':admin_invoices,
-            'admin_isk': admin_isk['total_isk'],
-            'outstanding_isk': outstanding,
-            'complete_invoices':completed_invoices,
-            'recipt_corp':recipt_corp}
+    ctx = {'invoices': invoices,
+           'admin_invoices': admin_invoices,
+           'admin_isk': admin_isk['total_isk'],
+           'outstanding_isk': outstanding,
+           'complete_invoices': completed_invoices,
+           'recipt_corp': recipt_corp}
 
     return render(request, 'invoices/list.html', context=ctx)
+
 
 @login_required
 @permission_required('invoices.admin')
@@ -54,24 +62,25 @@ def show_admin(request):
     }
     return render(request, 'invoices/admin.html', context=context)
 
+
 @login_required
 @permission_required('invoices.admin')
 def admin_create_tasks(request):
     schedule_check_payments, _ = CrontabSchedule.objects.get_or_create(minute='15,30,45',
-                                                             hour='*',
-                                                             day_of_week='*',
-                                                             day_of_month='*',
-                                                             month_of_year='*',
-                                                             timezone='UTC'
-                                                             )
+                                                                       hour='*',
+                                                                       day_of_week='*',
+                                                                       day_of_month='*',
+                                                                       month_of_year='*',
+                                                                       timezone='UTC'
+                                                                       )
 
     schedule_outstanding_payments, _ = CrontabSchedule.objects.get_or_create(minute='0',
-                                                             hour='12',
-                                                             day_of_week='*',
-                                                             day_of_month='*',
-                                                             month_of_year='*',
-                                                             timezone='UTC'
-                                                             )
+                                                                             hour='12',
+                                                                             day_of_week='*',
+                                                                             day_of_month='*',
+                                                                             month_of_year='*',
+                                                                             timezone='UTC'
+                                                                             )
 
     task_check_payments = PeriodicTask.objects.update_or_create(
         task='invoices.tasks.check_for_payments',
@@ -95,3 +104,11 @@ def admin_create_tasks(request):
         request, "Created/Reset Invoice Task to defaults")
 
     return redirect('invoices:admin')
+
+
+@login_required
+def react_main(request):
+    # get available models
+    ctx = {"js_import": "invoices/invoices-main-" +
+           __version__.replace(".", "-") + ".js"}
+    return render(request, 'invoices/react_base.html', context=ctx)

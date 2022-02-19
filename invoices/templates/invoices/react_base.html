@@ -1,0 +1,91 @@
+{% extends 'allianceauth/base.html' %}
+{% load i18n %}
+{% load invoices %}
+
+{% block page_title %}{% invoice_app_name %}{% endblock %}
+{% block extra_javascript %}
+<script type="text/javascript">
+    var BASE_URL = '/static/invoices/';
+
+    function loadCss (cssFiles) {
+        cssFiles.forEach(function (css) {
+            $('<link>')
+                .appendTo('body')
+                .attr({
+                    type: 'text/css',
+                    rel: 'stylesheet',
+                    href: css,
+                });
+        });
+    }
+
+    function loadNextScript (scripts) {
+        if (!scripts.length) { return; }
+
+        var script = scripts.shift();
+        $.ajax(script, {
+            dataType: 'script',
+            success: function () { loadNextScript(scripts) },
+        })
+    }
+
+    $.ajax(BASE_URL + 'asset-manifest.json', {
+        dataType: "json",
+        success : function (data, textStatus, jqXHR) {
+
+            if (data && data.entrypoints && data.entrypoints.length > 0) {
+                var scripts =
+                    data.entrypoints
+                        .filter(function (resource) {
+                            return resource.match(/.+\.js$/)
+                        })
+                        .map(function (script) {
+                            return BASE_URL + script;
+                        });
+                var cssFiles =
+                    data.entrypoints
+                        .filter(function (ressource) {
+                            return ressource.match(/.+\.css$/)
+                        })
+                        .map(function (file) {
+                            return BASE_URL + file;
+                        });
+
+                loadCss(cssFiles);
+                loadNextScript(scripts);
+            }
+        },
+        error: function () {
+            console.log('unable to load react app, manifest file not accessible or corrupted');
+        }
+    })
+
+</script>
+{% endblock extra_javascript %}
+
+{% block content %}
+<br>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'invoices:r_list' %}">{% invoice_app_name %}</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                {% if perms.invoices.admin %}
+                 <li><a class="" href="{% url 'invoices:admin' %}">Invoice Managment</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+    </div>
+</nav>
+<div id="root"></div>
+{% endblock content %}

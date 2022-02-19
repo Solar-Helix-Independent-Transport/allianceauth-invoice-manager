@@ -4,6 +4,7 @@ from corptools.models import CharacterWalletJournalEntry
 
 from invoices.models import Invoice
 
+
 class Command(BaseCommand):
     help = 'Run Payments with Character Records'
 
@@ -24,7 +25,8 @@ class Command(BaseCommand):
         for invoice in invoices:
             self.stdout.write("Checking {}".format(invoice.invoice_ref))
             if invoice.invoice_ref in payment_dict:
-                self.stdout.write("Payment Found! {}".format(invoice.invoice_ref))
+                self.stdout.write(
+                    "Payment Found! {}".format(invoice.invoice_ref))
                 payment_totals = 0
                 for p in payment_dict[invoice.invoice_ref]:
                     payment_totals += p.amount * -1

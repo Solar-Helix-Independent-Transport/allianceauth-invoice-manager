@@ -25,6 +25,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='invoice',
             name='payment',
-            field=models.OneToOneField(blank=True, default=None, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='invoice', to='corptools.corporationwalletjournalentry'),
+            field=models.OneToOneField(blank=True, default=None, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                       related_name='invoice', to='corptools.corporationwalletjournalentry'),
         ),
     ]

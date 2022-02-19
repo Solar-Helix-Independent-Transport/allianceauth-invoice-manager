@@ -6,6 +6,7 @@ from allianceauth.eveonline.models import EveCharacter, EveCorporationInfo, EveA
 
 logger = logging.getLogger(__name__)
 
+
 class InvoiceQuerySet(models.QuerySet):
     def visible_to(self, user):
         # superusers get all visible
@@ -24,23 +25,28 @@ class InvoiceQuerySet(models.QuerySet):
             queries = [models.Q(character__character_ownership__user=user)]
             if user.has_perm('invoices.view_alliance'):
                 if char.alliance_id is not None:
-                    queries.append(models.Q(character__alliance_id=char.alliance_id))
+                    queries.append(
+                        models.Q(character__alliance_id=char.alliance_id))
                 else:
-                    queries.append(models.Q(character__corporation_id=char.corporation_id))
+                    queries.append(
+                        models.Q(character__corporation_id=char.corporation_id))
             if user.has_perm('invoices.view_corp'):
                 if user.has_perm('invoices.view_alliance'):
                     pass
                 else:
-                    queries.append(models.Q(character__corporation_id=char.corporation_id))
-            logger.debug('%s queries for user %s characters.' % (len(queries), user))
+                    queries.append(
+                        models.Q(character__corporation_id=char.corporation_id))
+            logger.debug('%s queries for user %s characters.' %
+                         (len(queries), user))
             # filter based on queries
             query = queries.pop()
             for q in queries:
                 query |= q
             return self.filter(query)
         except AssertionError:
-            logger.debug('User %s has no main character. Nothing visible.' % user)
-            return self.none()        
+            logger.debug(
+                'User %s has no main character. Nothing visible.' % user)
+            return self.none()
 
 
 class InvoiceManager(models.Manager):
