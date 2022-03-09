@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.conf import settings
 import re
 
@@ -15,10 +16,16 @@ def get_site_url():  # regex sso url
 
 PAYMENT_CORP = getattr(settings, "PAYMENT_CORP", 1639878825)
 
+
 # Name of this app as shown in the Auth sidebar, page titles
 INVOICES_APP_NAME = getattr(
     settings, "INVOICES_APP_NAME", "Alliance Contributions")
 
 
 def discord_bot_active():
-    return 'aadiscordbot' in settings.INSTALLED_APPS
+    if apps.is_installed("aadiscordbot"):
+        import aadiscordbot as ab
+        version = ab.__version__.split(".")
+        if int(version[0]) >= 3:
+            return True
+    return False
