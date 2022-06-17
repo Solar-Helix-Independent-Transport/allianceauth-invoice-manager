@@ -1,9 +1,14 @@
 import React from "react";
-import { Button } from "react-bootstrap";
-import { useTable, useFilters, usePagination } from "react-table";
+import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
+import {
+  useTable,
+  useFilters,
+  usePagination,
+  useSortBy,
+  useExpanded,
+} from "react-table";
 import Select from "react-select";
 import { Bars } from "@agney/react-loading";
-
 import {
   ButtonToolbar,
   ButtonGroup,
@@ -12,8 +17,68 @@ import {
   SplitButton,
   Table,
 } from "react-bootstrap";
+import "./BaseTable.css";
+import { ErrorLoader } from "../components/ErrorLoader";
 
-const colourStyles = {
+export function SubRows({
+  row,
+  rowProps,
+  visibleColumns,
+  data,
+  error,
+  isLoading,
+}) {
+  if (isLoading) {
+    return (
+      <tr>
+        <td />
+        <td colSpan={visibleColumns.length - 1}>Loading...</td>
+      </tr>
+    );
+  }
+  if (error) {
+    return (
+      <tr>
+        <td />
+        <td colSpan={visibleColumns.length - 1}>Unable to Fetch from API!</td>
+      </tr>
+    );
+  }
+
+  if (data.length === 0) {
+    return (
+      <tr>
+        <td />
+        <td colSpan={visibleColumns.length - 1}>Empty!</td>
+      </tr>
+    );
+  }
+
+  // error handling here :)
+
+  return (
+    <>
+      {data.map((x, i) => {
+        return (
+          <tr {...rowProps} key={`${rowProps.key}-expanded-${i}`}>
+            {row.cells.map((cell) => {
+              return (
+                <td {...cell.getCellProps()}>
+                  {cell.render(cell.column.SubCell ? "SubCell" : "Cell", {
+                    value: cell.column.accessor && cell.column.accessor(x, i),
+                    row: { ...row, original: x },
+                  })}
+                </td>
+              );
+            })}
+          </tr>
+        );
+      })}
+    </>
+  );
+}
+
+export const colourStyles = {
   option: (styles) => {
     return {
       ...styles,
@@ -21,6 +86,10 @@ const colourStyles = {
     };
   },
 };
+
+function MyTooltip({ message }) {
+  return <Tooltip id="character_tooltip">{message}</Tooltip>;
+}
 
 // Define a default UI for filtering
 function DefaultColumnFilter({
@@ -60,7 +129,11 @@ export function SelectColumnFilter({
     }
     preFilteredRows.forEach((row) => {
       if (row.values[id] !== null) {
-        options.add(row.values[id]);
+        if (typeof row.values[id] === "object") {
+          options.add(row.values[id]["name"]);
+        } else {
+          options.add(row.values[id]);
+        }
       }
     });
     return [...options.values()];
@@ -86,11 +159,20 @@ export function SelectColumnFilter({
 
 const defaultPropGetter = () => ({});
 
+function strToKey(keyString, ob) {
+  return keyString.split(".").reduce(function (p, prop) {
+    return p[prop];
+  }, ob);
+}
+
 export const BaseTable = ({
   isLoading,
+  isFetching,
   data,
   error,
   columns,
+  asyncExpandFunction,
+  defaultSort = [],
   getRowProps = defaultPropGetter,
 }) => {
   const defaultColumn = React.useMemo(
@@ -109,8 +191,22 @@ export const BaseTable = ({
             if (!filterValue) {
               return true;
             } else {
-              const rowValue = row.values[id];
-              return rowValue ? rowValue.includes(filterValue) : false;
+              let rowValue = row.values[id];
+              if (rowValue !== null) {
+                if (typeof rowValue === "object") {
+                  rowValue = rowValue.name;
+                }
+                if (row.hasOwnProperty("originalSubRows")) {
+                  rowValue += row.originalSubRows.reduce((p, r) => {
+                    return (p += " " + strToKey(id, r));
+                  }, "");
+                }
+                return rowValue
+                  ? rowValue.toLowerCase().includes(filterValue.toLowerCase())
+                  : false;
+              } else {
+                return false;
+              }
             }
           });
         });
@@ -133,6 +229,7 @@ export const BaseTable = ({
     nextPage,
     previousPage,
     setPageSize,
+    visibleColumns,
     state: { pageIndex, pageSize },
   } = useTable(
     {
@@ -140,9 +237,11 @@ export const BaseTable = ({
       data,
       defaultColumn,
       filterTypes,
-      initialState: { pageSize: 25 },
+      initialState: { pageSize: 10, sortBy: defaultSort },
     },
     useFilters,
+    useSortBy,
+    useExpanded,
     usePagination
   );
 
@@ -153,7 +252,7 @@ export const BaseTable = ({
       </div>
     );
 
-  if (error) return <div></div>;
+  if (error) return <ErrorLoader />;
 
   return (
     <>
@@ -162,7 +261,25 @@ export const BaseTable = ({
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  {column.render("Header")}
+                  {/* Add a sort direction indicator */}
+                  <span className="pull-right">
+                    {column.canSort ? (
+                      column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <Glyphicon glyph="sort-by-attributes-alt" />
+                        ) : (
+                          <Glyphicon glyph="sort-by-attributes" />
+                        )
+                      ) : (
+                        <Glyphicon glyph="sort" />
+                      )
+                    ) : (
+                      ""
+                    )}
+                  </span>
+                </th>
               ))}
             </tr>
           ))}
@@ -179,19 +296,24 @@ export const BaseTable = ({
         <tbody {...getTableBodyProps()}>
           {page.map((row, i) => {
             prepareRow(row);
+            const rowProps = getRowProps(row);
             return (
-              <tr {...row.getRowProps(getRowProps(row))}>
-                {row.cells.map((cell) => {
-                  return (
-                    <td
-                      style={{ verticalAlign: "middle" }}
-                      {...cell.getCellProps()}
-                    >
-                      {cell.render("Cell")}
-                    </td>
-                  );
-                })}
-              </tr>
+              <>
+                <tr {...row.getRowProps(rowProps)}>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td
+                        style={{ verticalAlign: "middle" }}
+                        {...cell.getCellProps()}
+                      >
+                        {cell.render("Cell")}
+                      </td>
+                    );
+                  })}
+                </tr>
+                {row.isExpanded &&
+                  asyncExpandFunction({ row, rowProps, visibleColumns })}
+              </>
             );
           })}
         </tbody>
@@ -233,14 +355,20 @@ export const BaseTable = ({
               {"Page Size:"}
             </Button>{" "}
             <SplitButton
+              id="pageSizeDropdown"
               bsStyle="success"
               title={pageSize}
               onSelect={(e) => {
                 setPageSize(Number(e));
               }}
             >
-              {[25, 50, 100, 1000].map((pageSize) => (
-                <MenuItem eventKey={pageSize} value={pageSize}>
+              {[10, 20, 50, 100, 1000000].map((pageSize) => (
+                <MenuItem
+                  id={pageSize}
+                  key={pageSize}
+                  eventKey={pageSize}
+                  value={pageSize}
+                >
                   Show {pageSize}
                 </MenuItem>
               ))}
@@ -253,13 +381,45 @@ export const BaseTable = ({
           <Button active bsStyle="info">
             {
               <>
-                Page{" "}
-                <strong>
-                  {pageIndex + 1} of {pageOptions.length}
-                </strong>
+                {pageOptions.length > 0 ? (
+                  <>
+                    Page{" "}
+                    <strong>
+                      {pageIndex + 1} of {pageOptions.length}
+                    </strong>
+                  </>
+                ) : (
+                  <>
+                    Page <strong>- of -</strong>
+                  </>
+                )}
               </>
             }
           </Button>{" "}
+          {isFetching ? (
+            <OverlayTrigger
+              placement="bottom"
+              overlay={MyTooltip({ message: "Refreshing Data" })}
+            >
+              <Button bsStyle="info">
+                <Glyphicon
+                  className="glyphicon-refresh-animate"
+                  glyph="refresh"
+                />
+              </Button>
+            </OverlayTrigger>
+          ) : (
+            <OverlayTrigger
+              placement="bottom"
+              overlay={MyTooltip({
+                message: "Data Loaded: " + new Date().toLocaleString(),
+              })}
+            >
+              <Button bsStyle="info">
+                <Glyphicon glyph="ok" />
+              </Button>
+            </OverlayTrigger>
+          )}
         </ButtonGroup>
       </div>
     </>

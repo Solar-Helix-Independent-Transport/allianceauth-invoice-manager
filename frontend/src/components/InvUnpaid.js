@@ -8,9 +8,13 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Bars } from "@agney/react-loading";
 
 const InvUnpaid = () => {
-  const { isLoading, error, data } = useQuery("unpaid", () => loadUnpaid(), {
-    initialData: [],
-  });
+  const { isLoading, isFetching, error, data } = useQuery(
+    "unpaid",
+    () => loadUnpaid(),
+    {
+      initialData: [],
+    }
+  );
 
   function getRowProps(row) {
     console.log(row.values);
@@ -35,7 +39,7 @@ const InvUnpaid = () => {
         Header: "Character",
         accessor: "character.character_name",
         Filter: textColumnFilter,
-        filter: "includes",
+        filter: "text",
       },
       {
         Header: "Due Date",
@@ -51,7 +55,7 @@ const InvUnpaid = () => {
         Header: "Invoice Reference",
         accessor: "invoice_ref",
         Filter: textColumnFilter,
-        filter: "includes",
+        filter: "text",
         Cell: (props) => (
           <>
             <CopyToClipboard text={props.value} className="text-center">
@@ -117,13 +121,29 @@ const InvUnpaid = () => {
     ],
     []
   );
+  const defaultSort = [
+    {
+      id: "due_date",
+      desc: false,
+    },
+  ];
 
   return (
     <Panel>
       <Panel.Heading>Your Contributions</Panel.Heading>
       <Panel.Body>
         {!isLoading ? (
-          <BaseTable {...{ isLoading, data, columns, error, getRowProps }} />
+          <BaseTable
+            {...{
+              isLoading,
+              data,
+              columns,
+              error,
+              getRowProps,
+              isFetching,
+              defaultSort,
+            }}
+          />
         ) : (
           <p className="text-center">
             <Bars

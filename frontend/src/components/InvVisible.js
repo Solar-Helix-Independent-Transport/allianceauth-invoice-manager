@@ -10,7 +10,7 @@ import { Button, Panel, Glyphicon, ButtonGroup } from "react-bootstrap";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const InvVisible = () => {
-  const { isLoading, error, data } = useQuery("visible", () =>
+  const { isLoading, isFetching, error, data } = useQuery("visible", () =>
     loadAllVisible()
   );
 
@@ -30,13 +30,13 @@ const InvVisible = () => {
         Header: "Character",
         accessor: "character.character_name",
         Filter: textColumnFilter,
-        filter: "includes",
+        filter: "text",
       },
       {
         Header: "Corporation",
         accessor: "character.corporation_name",
         Filter: SelectColumnFilter,
-        filter: "includes",
+        filter: "text",
         Cell: (props) => (
           <div style={{ whiteSpace: "nowrap" }}> {props.value} </div>
         ),
@@ -64,7 +64,7 @@ const InvVisible = () => {
         Header: "Invoice Reference",
         accessor: "invoice_ref",
         Filter: textColumnFilter,
-        filter: "includes",
+        filter: "text",
         Cell: (props) => (
           <>
             <CopyToClipboard text={props.value} className="text-center">
@@ -101,14 +101,29 @@ const InvVisible = () => {
     ],
     []
   );
-
+  const defaultSort = [
+    {
+      id: "due_date",
+      desc: false,
+    },
+  ];
   return (
     <>
       {!isLoading ? (
         <Panel>
           <Panel.Heading>Visible Contributions</Panel.Heading>
           <Panel.Body>
-            <BaseTable {...{ isLoading, data, columns, error, getRowProps }} />
+            <BaseTable
+              {...{
+                isLoading,
+                data,
+                columns,
+                error,
+                getRowProps,
+                isFetching,
+                defaultSort,
+              }}
+            />
           </Panel.Body>
         </Panel>
       ) : (
