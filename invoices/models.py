@@ -131,7 +131,7 @@ class NoOverdueFilter(FilterBase):
         chars = {}
         now = timezone.now()
         outstanding_invoices = Invoice.objects.filter(
-            character__in=co.values_list('character'), due_date__lte=now)
+            character__in=co.values_list('character'), due_date__lte=now, paid=False)
 
         for i in outstanding_invoices:
             uid = i.character.character_ownership.user.id
