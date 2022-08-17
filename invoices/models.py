@@ -142,7 +142,7 @@ class NoOverdueFilter(FilterBase):
                 chars[uid] = 0
             chars[uid] += 1
 
-        output = defaultdict(lambda: {"message": "Failed", "check": failure})
+        output = defaultdict(lambda: {"message": "Failed", "check": False})
         for u in users:
             c = chars.get(u.id, False)
             if c > 0:
