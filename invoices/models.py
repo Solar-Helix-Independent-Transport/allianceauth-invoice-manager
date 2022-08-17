@@ -114,6 +114,8 @@ class FilterBase(models.Model):
 
 class NoOverdueFilter(FilterBase):
 
+    swap_logic = models.BooleanField(default=False)
+
     class Meta:
         verbose_name = "Smart Filter: No Overdue Invoice"
         verbose_name_plural = f"{verbose_name}s"
@@ -133,19 +135,20 @@ class NoOverdueFilter(FilterBase):
         outstanding_invoices = Invoice.objects.filter(
             character__in=co.values_list('character'), due_date__lte=now, paid=False)
 
+        failure = self.swap_logic
         for i in outstanding_invoices:
             uid = i.character.character_ownership.user.id
             if uid not in chars:
                 chars[uid] = 0
             chars[uid] += 1
 
-        output = defaultdict(lambda: {"message": "Failed", "check": False})
+        output = defaultdict(lambda: {"message": "Failed", "check": failure})
         for u in users:
             c = chars.get(u.id, False)
             if c > 0:
-                output[u.id] = {"message": f"{c} Overdue", "check": False}
+                output[u.id] = {"message": f"{c} Overdue", "check": failure}
                 continue
             else:
-                output[u.id] = {"message": "No Overdue", "check": True}
+                output[u.id] = {"message": "No Overdue", "check": not failure}
                 continue
         return output
