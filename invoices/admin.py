@@ -1,7 +1,9 @@
+from django.conf import settings
 from django.contrib import admin
 
 # Register your models here.
 from .models import Invoice
+from invoices import models
 
 
 class InvoicesAdmin(admin.ModelAdmin):
@@ -13,3 +15,7 @@ class InvoicesAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Invoice, InvoicesAdmin)
+
+
+if 'securegroups' in settings.INSTALLED_APPS:
+    admin.site.register(models.NoOverdueFilter)

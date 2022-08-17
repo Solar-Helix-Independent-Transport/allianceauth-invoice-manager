@@ -1,8 +1,11 @@
+from collections import defaultdict
+from allianceauth.authentication.models import CharacterOwnership
 from django.db import models
 from allianceauth.eveonline.models import EveCharacter
 from allianceauth.notifications import notify as auth_notify
 from corptools.models import CorporationWalletJournalEntry
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 from . import app_settings
 from .managers import InvoiceManager
@@ -89,3 +92,60 @@ class Invoice(models.Model):
                        ('view_all', 'Can View All Invoices'),
                        ('access_invoices', 'Can Access the Invoice App')
                        )
+
+
+# sec group classes
+
+
+class FilterBase(models.Model):
+
+    name = models.CharField(max_length=500)
+    description = models.CharField(max_length=500)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return f"{self.name}: {self.description}"
+
+    def process_filter(self, user: User):
+        raise NotImplementedError("Please Create a filter!")
+
+
+class NoOverdueFilter(FilterBase):
+
+    class Meta:
+        verbose_name = "Smart Filter: No Overdue Invoice"
+        verbose_name_plural = f"{verbose_name}s"
+
+    def process_filter(self, user: User):
+        try:
+            return self.audit_filter([user])[user.id]['check']
+        except Exception as e:
+            logger.error(e, exc_info=1)
+            return False
+
+    def audit_filter(self, users):
+        co = CharacterOwnership.objects.filter(
+            user__in=users).select_related('user', 'character')
+        chars = {}
+        now = timezone.now()
+        outstanding_invoices = Invoice.objects.filter(
+            character__in=co.values_list('character'), due_date__lte=now)
+
+        for i in outstanding_invoices:
+            uid = i.character.character_ownership.user.id
+            if uid not in chars:
+                chars[uid] = 0
+            chars[uid] += 1
+
+        output = defaultdict(lambda: {"message": "Failed", "check": False})
+        for u in users:
+            c = chars.get(u.id, False)
+            if c > 0:
+                output[u.id] = {"message": f"{c} Overdue", "check": False}
+                continue
+            else:
+                output[u.id] = {"message": "No Overdue", "check": True}
+                continue
+        return output

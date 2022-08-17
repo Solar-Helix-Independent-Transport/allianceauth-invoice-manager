@@ -5,6 +5,7 @@ from allianceauth import hooks
 from .models import Invoice
 from . import app_settings
 from . import urls
+from invoices import models
 
 
 class Invoices(MenuItemHook):
@@ -34,3 +35,13 @@ def register_menu():
 @hooks.register('url_hook')
 def register_url():
     return UrlHook(urls, 'invoices', r'^invoice/')
+
+
+@hooks.register("secure_group_filters")
+def filters():
+    return [models.NoOverdueFilter]
+
+
+@hooks.register('discord_cogs_hook')
+def register_cogs():
+    return ["invoices.cogs"]
