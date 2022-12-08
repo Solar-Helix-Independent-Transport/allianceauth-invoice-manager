@@ -113,10 +113,12 @@ const InvUnpaid = () => {
             //</Button>
           ),
       },
-
       {
         Header: "Details",
         accessor: "note",
+        Cell: (props) => (
+          <div style={{ whiteSpace: "pre-line" }}>{props.value}</div>
+        ),
       },
     ],
     []

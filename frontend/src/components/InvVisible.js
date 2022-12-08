@@ -97,6 +97,9 @@ const InvVisible = () => {
       {
         Header: "Details",
         accessor: "note",
+        Cell: (props) => (
+          <div style={{ whiteSpace: "pre-line" }}>{props.value}</div>
+        ),
       },
     ],
     []
