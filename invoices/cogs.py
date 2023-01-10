@@ -1,15 +1,20 @@
 # Cog Stuff
-from discord import option
+import datetime
+from allianceauth.eveonline.models import EveCharacter
+from discord import AllowedMentions, InputTextStyle, Interaction, option
 from discord.ext import commands
+from discord import AutocompleteContext, option
 from discord.embeds import Embed
 from discord.colour import Color
+from discord.ui import InputText, Modal
 
 # AA Contexts
 from django.conf import settings
+from django.db import IntegrityError
 from django.utils import timezone
 
 # AA-Discordbot
-from aadiscordbot.cogs.utils.decorators import has_any_perm
+from aadiscordbot.cogs.utils.decorators import has_any_perm, sender_has_perm
 from allianceauth.services.modules.discord.models import DiscordUser
 from aadiscordbot.app_settings import get_site_url
 
@@ -18,6 +23,17 @@ import logging
 from invoices.models import Invoice
 
 logger = logging.getLogger(__name__)
+
+
+def input_to_number(string_input):
+    replacements = {
+        "K": "000",
+        "M": "000000",
+        "B": "000000000"
+    }
+    for key in replacements.keys():
+        string_input = string_input.upper().replace(key, replacements[key])
+    return string_input
 
 
 class Invoices(commands.Cog):
@@ -67,6 +83,90 @@ class Invoices(commands.Cog):
             embed.url = get_site_url()
 
             await ctx.respond(embed=embed, ephemeral=True)
+        except commands.MissingPermissions as e:
+            return await ctx.respond(e.missing_permissions[0], ephemeral=True)
+
+    async def search_characters(ctx: AutocompleteContext):
+        return list(EveCharacter.objects.filter(character_name__icontains=ctx.value).values_list('character_name', flat=True)[:10])
+
+    class InvoiceReference(Modal):
+        def __init__(self, send_from, sent_to, msg):
+            super().__init__(title="Fine Member")
+            self.send_from = send_from
+            self.send_to = sent_to
+            self.msg = msg
+
+            self.add_item(
+                InputText(
+                    label="Amount",
+                    placeholder="How much to Invoice eg. 5B, 5000m, 5kkk",
+                )
+            )
+
+            self.add_item(
+                InputText(
+                    label="Reason",
+                    placeholder="The Invoice Reason",
+                    value=f"`{self.msg.clean_content}` ",
+                    style=InputTextStyle.long,
+                )
+            )
+
+        async def callback(self, interaction: Interaction):
+            try:
+                _t = timezone.now() + datetime.timedelta(days=7)
+                _i = Invoice.objects.create(
+                    character=self.send_to,
+                    amount=int(input_to_number(self.children[0].value)),
+                    note=self.children[1].value,
+                    invoice_ref=f"{str(self.send_to).replace(' ','_')}-{str(hash(_t))[-10:]}",
+                    due_date=_t
+                )
+                _i.notify(
+                    f"{self.send_from} Sent you a fine!\nPlease check auth for details.")
+                await self.msg.reply(f"{self.send_from} has fined {self.send_to}, ${int(input_to_number(self.children[0].value)):,}.")
+                await interaction.response.send_message("Done...", ephemeral=True)
+            except Exception as e:
+                await interaction.response.send_message(e, ephemeral=True)
+            self.stop()
+
+    @commands.message_command(name="Fine User for Message", guild_ids=[int(settings.DISCORD_GUILD_ID)])
+    @sender_has_perm("invoices.add_invoice")
+    async def new_invoice(self, ctx, message):
+        user_to_fine = DiscordUser.objects.get(
+            uid=message.author.id).user.profile.main_character
+        user_who_fine = DiscordUser.objects.get(
+            uid=ctx.author.id).user.profile.main_character
+        ask_for_reason_text = Invoices.InvoiceReference(
+            user_who_fine, user_to_fine, message)
+
+        await ctx.send_modal(ask_for_reason_text)
+
+    @commands.slash_command(name='new_invoice', guild_ids=[int(settings.DISCORD_GUILD_ID)])
+    @option("character", description="Character to invoice!", autocomplete=search_characters)
+    @option("amount", description="Amount to invoice", type=str)
+    @option("reason", description="Reason to put on invoice!", type=str)
+    async def send_invoice(self, ctx, character, amount, reason):
+        try:
+            has_any_perm(ctx.author.id, ['invoices.add_invoice'])
+            await ctx.defer(ephemeral=False)
+            user = DiscordUser.objects.get(uid=ctx.author.id).user
+            try:
+                char = EveCharacter.objects.get(character_name=character)
+                _t = timezone.now() + datetime.timedelta(days=7)
+                _i = Invoice.objects.create(character=char,
+                                            amount=int(
+                                                input_to_number(amount)),
+                                            note=reason,
+                                            due_date=_t,
+                                            invoice_ref=f"{str(char).replace(' ','_')}-{str(hash(_t))[-10:]}")
+                _i.notify(
+                    f"{user.profile.main_character} Sent you an invoice! Please check auth for details!")
+                return await ctx.respond(f"Sent {char} and Invoice for {int(input_to_number(amount)):,}!")
+
+            except EveCharacter.DoesNotExist:
+                return await ctx.respond("Character Not Found!")
+
         except commands.MissingPermissions as e:
             return await ctx.respond(e.missing_permissions[0], ephemeral=True)
 
