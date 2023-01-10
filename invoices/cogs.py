@@ -33,7 +33,7 @@ def input_to_number(string_input):
     }
     for key in replacements.keys():
         string_input = string_input.upper().replace(key, replacements[key])
-    return string_input
+    return int(string_input)
 
 
 class Invoices(commands.Cog):
@@ -67,7 +67,7 @@ class Invoices(commands.Cog):
                     total += i.amount
 
             embed = Embed()
-            embed.title = "Invocies!"
+            embed.title = "Invoices!"
             if total+total_overdue > 0:
                 embed.description = f"Please check auth for more info!"
                 embed.add_field(name=f"Total Overdue Invoices",
@@ -90,11 +90,15 @@ class Invoices(commands.Cog):
         return list(EveCharacter.objects.filter(character_name__icontains=ctx.value).values_list('character_name', flat=True)[:10])
 
     class InvoiceReference(Modal):
-        def __init__(self, send_from, sent_to, msg):
+        def __init__(self, send_from, sent_to, msg=None):
             super().__init__(title="Fine Member")
             self.send_from = send_from
             self.send_to = sent_to
             self.msg = msg
+
+            prefill = None
+            if msg:
+                prefill = f"`{self.msg.clean_content}` "
 
             self.add_item(
                 InputText(
@@ -107,7 +111,7 @@ class Invoices(commands.Cog):
                 InputText(
                     label="Reason",
                     placeholder="The Invoice Reason",
-                    value=f"`{self.msg.clean_content}` ",
+                    value=prefill,
                     style=InputTextStyle.long,
                 )
             )
@@ -117,29 +121,42 @@ class Invoices(commands.Cog):
                 _t = timezone.now() + datetime.timedelta(days=7)
                 _i = Invoice.objects.create(
                     character=self.send_to,
-                    amount=int(input_to_number(self.children[0].value)),
+                    amount=input_to_number(self.children[0].value),
                     note=self.children[1].value,
-                    invoice_ref=f"{str(self.send_to).replace(' ','_')}-{str(hash(_t))[-10:]}",
+                    invoice_ref=f"{str(self.send_to).replace(' ','')}-{str(hash(_t))[-10:]}".lower(
+                    ),
                     due_date=_t
                 )
                 _i.notify(
                     f"{self.send_from} Sent you a fine!\nPlease check auth for details.")
-                await self.msg.reply(f"{self.send_from} has fined {self.send_to}, ${int(input_to_number(self.children[0].value)):,}.")
-                await interaction.response.send_message("Done...", ephemeral=True)
+                msg = f"{self.send_from} has fined {self.send_to}, Ƶ{input_to_number(self.children[0].value):,}"
+                if self.msg:
+                    await self.msg.reply(msg)
+                await interaction.response.send_message(msg, ephemeral=True)
             except Exception as e:
                 await interaction.response.send_message(e, ephemeral=True)
             self.stop()
 
     @commands.message_command(name="Fine User for Message", guild_ids=[int(settings.DISCORD_GUILD_ID)])
     @sender_has_perm("invoices.add_invoice")
-    async def new_invoice(self, ctx, message):
+    async def new_invoice_message(self, ctx, message):
         user_to_fine = DiscordUser.objects.get(
             uid=message.author.id).user.profile.main_character
         user_who_fine = DiscordUser.objects.get(
             uid=ctx.author.id).user.profile.main_character
         ask_for_reason_text = Invoices.InvoiceReference(
             user_who_fine, user_to_fine, message)
+        await ctx.send_modal(ask_for_reason_text)
 
+    @commands.user_command(name="Fine User", guild_ids=[int(settings.DISCORD_GUILD_ID)])
+    @sender_has_perm("invoices.add_invoice")
+    async def new_invoice_user(self, ctx, user):
+        user_to_fine = DiscordUser.objects.get(
+            uid=user.id).user.profile.main_character
+        user_who_fine = DiscordUser.objects.get(
+            uid=ctx.author.id).user.profile.main_character
+        ask_for_reason_text = Invoices.InvoiceReference(
+            user_who_fine, user_to_fine)
         await ctx.send_modal(ask_for_reason_text)
 
     @commands.slash_command(name='new_invoice', guild_ids=[int(settings.DISCORD_GUILD_ID)])
@@ -155,14 +172,13 @@ class Invoices(commands.Cog):
                 char = EveCharacter.objects.get(character_name=character)
                 _t = timezone.now() + datetime.timedelta(days=7)
                 _i = Invoice.objects.create(character=char,
-                                            amount=int(
-                                                input_to_number(amount)),
+                                            amount=input_to_number(amount),
                                             note=reason,
                                             due_date=_t,
-                                            invoice_ref=f"{str(char).replace(' ','_')}-{str(hash(_t))[-10:]}")
+                                            invoice_ref=f"{str(char).replace(' ','')}-{str(hash(_t))[-10:]}".lower())
                 _i.notify(
                     f"{user.profile.main_character} Sent you an invoice! Please check auth for details!")
-                return await ctx.respond(f"Sent {char} and Invoice for {int(input_to_number(amount)):,}!")
+                return await ctx.respond(f"Sent {char} and Invoice for Ƶ{input_to_number(amount):,}")
 
             except EveCharacter.DoesNotExist:
                 return await ctx.respond("Character Not Found!")
