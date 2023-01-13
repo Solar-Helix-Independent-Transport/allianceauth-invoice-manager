@@ -47,44 +47,49 @@ class Invoice(models.Model):
 
     def notify(self, message, title="Contributions Bot Message"):
         url = f"{app_settings.get_site_url()}{reverse('invoices:r_list')}"
-        u = self.character.character_ownership.user
-        if app_settings.discord_bot_active():
-            try:
-                if self.paid:
-                    color = Color.green()
-                elif self.is_past_due:
-                    color = Color.red()
-                else:
-                    color = Color.blue()
+        try:
+            u = self.character.character_ownership.user
+            if app_settings.discord_bot_active():
+                try:
+                    if self.paid:
+                        color = Color.green()
+                    elif self.is_past_due:
+                        color = Color.red()
+                    else:
+                        color = Color.blue()
 
-                e = Embed(title=title,
-                          description=message,
-                          url=url,
-                          color=color)
-                e.add_field(name="Amount",
-                            value=f"${self.amount:,}", inline=False)
-                e.add_field(name="Reference",
-                            value=self.invoice_ref, inline=False)
-                e.add_field(name="Due Date", value=self.due_date.strftime(
-                    "%Y/%m/%d"), inline=False)
+                    e = Embed(title=title,
+                              description=message,
+                              url=url,
+                              color=color)
+                    e.add_field(name="Amount",
+                                value=f"${self.amount:,}", inline=False)
+                    e.add_field(name="Reference",
+                                value=self.invoice_ref, inline=False)
+                    e.add_field(name="Due Date", value=self.due_date.strftime(
+                        "%Y/%m/%d"), inline=False)
 
-                bot_tasks.send_message(user_id=u.discord.uid,
-                                       embed=e)
-            except Exception as e:
-                logger.error(e, exc_info=True)
-                pass
-        message = "Invoice:{} Ƶ{:.2f}\n{}\n{}".format(
-            self.invoice_ref,
-            self.amount,
-            message,
-            url
-        )
-        auth_notify(
-            u,
-            title,
-            message,
-            'info'
-        )
+                    bot_tasks.send_message(user_id=u.discord.uid,
+                                           embed=e)
+                except Exception as e:
+                    logger.error(e, exc_info=True)
+                    pass
+
+            message = "Invoice:{} Ƶ{:.2f}\n{}\n{}".format(
+                self.invoice_ref,
+                self.amount,
+                message,
+                url
+            )
+            auth_notify(
+                u,
+                title,
+                message,
+                'info'
+            )
+        except Exception as e:
+            logger.error(e)
+            pass  # todo something nicer...
 
     class Meta:
         permissions = (('view_corp', 'Can View Own Corps Invoices'),
