@@ -37,7 +37,7 @@ def get_account_invoices(request):
     invoices = models.Invoice.objects.visible_to(
         request.user).filter(paid=False, character__in=chars)
     paid = models.Invoice.objects.visible_to(
-        request.user).filter(paid=True, character__in=chars)[:5]
+        request.user).filter(paid=True, character__in=chars)[5:]
     output = []
     for i in invoices:
         output.append(i)
