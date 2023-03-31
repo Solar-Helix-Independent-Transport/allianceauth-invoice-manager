@@ -9,6 +9,7 @@ help:
 	@echo "  deploy     Configure the PyPi config file in CI"
 	@echo "  packagejs  Build the React Project"
 	@echo "  packagepy  Build the PyPi package"
+	@echo "  devjs    Run the React Character Dev server"
 
 clean:
 	rm -rf dist/*
@@ -16,8 +17,8 @@ clean:
 
 dev:
 	pip install --upgrade pip
-	pip install wheel
-	pip install tox
+	pip install wheel -U
+	pip install tox -U
 	pip install -e .
 
 test:
@@ -25,11 +26,14 @@ test:
 
 deploy:
 	pip install twine
-	echo "[pypi]" > ~/.pypirc
-	echo "username=__token__" >> ~/.pypirc
-	echo "password=${pypi-api-token}" >> ~/.pypirc
-	cut -c-20 ~/.pypirc
+	twine upload dist/*
+
+buildjs:
+	cd frontend;yarn install;yarn build;
 
 package:
-	cd frontend;yarn install;yarn build
+	cd frontend;yarn install;yarn build;
 	python setup.py sdist
+
+devjs:
+	cd frontend;yarn install;yarn start
