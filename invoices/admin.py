@@ -19,3 +19,4 @@ admin.site.register(Invoice, InvoicesAdmin)
 
 if 'securegroups' in settings.INSTALLED_APPS:
     admin.site.register(models.NoOverdueFilter)
+    admin.site.register(models.TotalInvoicesFilter)

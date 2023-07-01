@@ -5,7 +5,8 @@ from allianceauth.eveonline.models import EveCharacter
 from allianceauth.notifications import notify as auth_notify
 from corptools.models import CorporationWalletJournalEntry
 from django.urls import reverse
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+from datetime import timedelta
 
 from . import app_settings
 from .managers import InvoiceManager
@@ -155,5 +156,50 @@ class NoOverdueFilter(FilterBase):
                 continue
             else:
                 output[u.id] = {"message": "No Overdue", "check": not failure}
+                continue
+        return output
+
+
+class TotalInvoicesFilter(FilterBase):
+    #ignore_groups = models.ManyToManyField(Group, blank=True)
+    min_amount = models.BigIntegerField(default=5000000000)
+    swap_logic = models.BooleanField(default=False)
+    only_paid = models.BooleanField(default=True)
+    months = models.IntegerField(default=3)
+
+    class Meta:
+        verbose_name = "Smart Filter: Total Invoice Isk"
+        verbose_name_plural = f"{verbose_name}s"
+
+    def process_filter(self, user: User):
+        try:
+            return self.audit_filter([user])[user.id]['check']
+        except Exception as e:
+            logger.error(e, exc_info=1)
+            return False
+
+    def audit_filter(self, users):
+        co = CharacterOwnership.objects.filter(
+            user__in=users).select_related('user', 'character')
+        chars = {}
+        look_back = timezone.now() - timedelta(days=30*self.months)
+        all_invoices = Invoice.objects.filter(
+            character__in=co.values_list('character'), due_date__gte=look_back, paid=self.only_paid)
+
+        failure = self.swap_logic
+        for i in all_invoices:
+            uid = i.character.character_ownership.user.id
+            if uid not in chars:
+                chars[uid] = 0
+            chars[uid] += i.amount
+
+        output = defaultdict(lambda: {"message": 0, "check": False})
+        for u in users:
+            c = int(chars.get(u.id, 0))
+            if c < self.min_amount:
+                output[u.id] = {"message": c, "check": failure}
+                continue
+            else:
+                output[u.id] = {"message": c, "check": not failure}
                 continue
         return output

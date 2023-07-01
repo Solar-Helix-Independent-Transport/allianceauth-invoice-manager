@@ -39,7 +39,7 @@ def register_url():
 
 @hooks.register("secure_group_filters")
 def filters():
-    return [models.NoOverdueFilter]
+    return [models.NoOverdueFilter, models.TotalInvoicesFilter]
 
 
 @hooks.register('discord_cogs_hook')
