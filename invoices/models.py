@@ -36,6 +36,8 @@ class Invoice(models.Model):
     paid = models.BooleanField(default=False, blank=True)
     payment = models.OneToOneField(CorporationWalletJournalEntry, blank=True,
                                    null=True, default=None, on_delete=models.SET_NULL, related_name='invoice')
+    marked_paid_by = models.ForeignKey(
+        EveCharacter, null=True, default=None, on_delete=models.SET_NULL, related_name='paychar')
 
     note = models.TextField(blank=True, null=True, default=None,)
 

@@ -1,75 +1,55 @@
 import React from "react";
 import { useQuery } from "react-query";
 import { loadAllVisible } from "../apis/Invoices";
-import {
-  BaseTable,
-  textColumnFilter,
-  SelectColumnFilter,
-} from "../components/BaseTable";
+import { BaseTable } from "@pvyparts/allianceauth-components";
 import { Button, Panel, Glyphicon, ButtonGroup } from "react-bootstrap";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import PaidButton from "./PaidButton";
 
 const InvVisible = () => {
-  const { isLoading, isFetching, error, data } = useQuery("visible", () =>
+  const { isLoading, isFetching, data } = useQuery("visible", () =>
     loadAllVisible()
   );
-
-  function getRowProps(row) {
-    let now = new Date();
-    let comp = new Date(row.values.due_date);
-    if (comp < now) {
-      return {
-        className: "danger",
-      };
-    }
-  }
 
   const columns = React.useMemo(
     () => [
       {
-        Header: "Character",
-        accessor: "character.character_name",
-        Filter: textColumnFilter,
-        filter: "text",
+        header: "Character",
+        accessorKey: "character.character_name",
       },
       {
-        Header: "Corporation",
-        accessor: "character.corporation_name",
-        Filter: SelectColumnFilter,
-        filter: "text",
-        Cell: (props) => (
-          <div style={{ whiteSpace: "nowrap" }}> {props.value} </div>
+        header: "Corporation",
+        accessorKey: "character.corporation_name",
+        cell: (props) => (
+          <div style={{ whiteSpace: "nowrap" }}> {props.getValue()} </div>
         ),
       },
       {
-        Header: "Alliance",
-        accessor: "character.alliance_name",
-        Filter: SelectColumnFilter,
-        filter: "text",
-        Cell: (props) => (
-          <div style={{ whiteSpace: "nowrap" }}> {props.value} </div>
+        header: "Alliance",
+        accessorKey: "character.alliance_name",
+        cell: (props) => (
+          <div style={{ whiteSpace: "nowrap" }}> {props.getValue()} </div>
         ),
       },
       {
-        Header: "Due Date",
-        accessor: "due_date",
-        Cell: (props) => (
+        header: "Due Date",
+        accessorKey: "due_date",
+        enableColumnFilter: false,
+
+        cell: (props) => (
           <div style={{ whiteSpace: "nowrap" }}>
-            {" "}
-            {new Date(props.value).toLocaleString()}{" "}
+            {new Date(props.getValue()).toLocaleString()}{" "}
           </div>
         ),
       },
       {
-        Header: "Invoice Reference",
-        accessor: "invoice_ref",
-        Filter: textColumnFilter,
-        filter: "text",
-        Cell: (props) => (
+        header: "Invoice Reference",
+        accessorKey: "invoice_ref",
+        cell: (props) => (
           <>
-            <CopyToClipboard text={props.value} className="text-center">
+            <CopyToClipboard text={props.getValue()} className="text-center">
               <ButtonGroup bsClass="btn-group special">
-                <Button>{props.value.toLocaleString()}</Button>
+                <Button>{props.getValue().toLocaleString()}</Button>
                 <Button bsClass="btn no-grow btn-warning">
                   <Glyphicon glyph="copy" />
                 </Button>
@@ -79,13 +59,13 @@ const InvVisible = () => {
         ),
       },
       {
-        Header: "Amount",
-        accessor: "amount",
-        Cell: (props) => (
+        header: "Amount",
+        accessorKey: "amount",
+        cell: (props) => (
           <>
-            <CopyToClipboard text={props.value} className="text-center">
+            <CopyToClipboard text={props.getValue()} className="text-center">
               <ButtonGroup bsClass="btn-group special">
-                <Button>{props.value.toLocaleString()}</Button>
+                <Button>{props.getValue()}</Button>
                 <Button bsClass="btn no-grow btn-warning">
                   <Glyphicon glyph="copy" />
                 </Button>
@@ -95,21 +75,30 @@ const InvVisible = () => {
         ),
       },
       {
-        Header: "Details",
-        accessor: "note",
-        Cell: (props) => (
-          <div style={{ whiteSpace: "pre-line" }}>{props.value}</div>
+        header: "Details",
+        accessorKey: "note",
+        cell: (props) => (
+          <div style={{ whiteSpace: "pre-line" }}>{props.getValue()}</div>
         ),
+      },
+      {
+        header: "Actions",
+        accessorKey: "action",
+        enableColumnFilter: false,
+        enableSorting: false,
+        cell: (props) =>
+          props.getValue() ? <PaidButton pk={props.row.original.pk} /> : <></>,
       },
     ],
     []
   );
-  const defaultSort = [
-    {
-      id: "due_date",
-      desc: false,
-    },
-  ];
+  let initialState = {};
+  if (data) {
+    let hideActions = data.reduce((p, c) => p | c.action, false);
+    if (!hideActions) {
+      initialState = { columnVisibility: { action: false } };
+    }
+  }
   return (
     <>
       {!isLoading ? (
@@ -121,10 +110,8 @@ const InvVisible = () => {
                 isLoading,
                 data,
                 columns,
-                error,
-                getRowProps,
+                initialState,
                 isFetching,
-                defaultSort,
               }}
             />
           </Panel.Body>

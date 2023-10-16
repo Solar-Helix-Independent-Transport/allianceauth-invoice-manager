@@ -13,6 +13,7 @@ from django.db.models import F, Sum, Q
 from allianceauth.eveonline.models import EveCharacter
 from django.conf import settings
 from .app_settings import PAYMENT_CORP
+from django.db.models import Value, BooleanField
 
 from . import models
 from . import schema
@@ -54,8 +55,12 @@ def get_account_invoices(request):
 )
 def get_visible_invoices(request):
     chars = request.user.character_ownerships.all().values_list('character')
+
     admin_invoices = models.Invoice.objects.visible_to(
-        request.user).filter(paid=False).exclude(character__in=chars)
+        request.user).filter(paid=False).exclude(
+        character__in=chars, character__character_ownership__user__isnull=True).annotate(action=Value(request.user.has_perm('invoices.change_invoice'),
+                                                                                                      output_field=BooleanField()))
+
     return 200, admin_invoices
 
 
@@ -66,3 +71,25 @@ def get_visible_invoices(request):
 )
 def get_payment_corp(request):
     return EveCorporationInfo.objects.get(corporation_id=PAYMENT_CORP)
+
+
+@api.post(
+    "admin/paid/{id}",
+    response={200: str, 404: str, 403: str},
+    tags=["admin"]
+)
+def post_mark_paid(request, id: int):
+    perms = request.user.has_perm('invoices.change_invoice')
+    if perms:
+        inv = models.Invoice.objects.visible_to(request.user).filter(id=id)
+        if inv.exists():
+            inv = inv.first()
+            inv.marked_paid_by = request.user.profile.main_character
+            inv.paid = True
+            inv.save()
+            inv.notify(
+                f"Invoice marked as paid by {request.user.profile.main_character}.")
+            return 200, "Invoice Paid"
+        return 404, "Invoice Not Found"
+    else:
+        return 403, "Permision Denied for User"

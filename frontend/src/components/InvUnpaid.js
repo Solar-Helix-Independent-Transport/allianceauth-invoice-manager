@@ -3,68 +3,42 @@ import { Button, Panel, Glyphicon, ButtonGroup } from "react-bootstrap";
 
 import { useQuery } from "react-query";
 import { loadUnpaid } from "../apis/Invoices";
-import { BaseTable, textColumnFilter } from "./BaseTable";
+import { BaseTable } from "@pvyparts/allianceauth-components";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { Bars } from "@agney/react-loading";
 
 const InvUnpaid = () => {
-  const { isLoading, isFetching, error, data } = useQuery(
-    "unpaid",
-    () => loadUnpaid(),
-    {
-      initialData: [],
-    }
+  const { isLoading, isFetching, error, data } = useQuery("unpaid", () =>
+    loadUnpaid()
   );
-
-  function getRowProps(row) {
-    console.log(row.values);
-    if (row.values.paid === true) {
-      return {
-        className: "info",
-      };
-    } else {
-      let now = new Date();
-      let comp = new Date(row.values.due_date);
-      if (comp < now) {
-        return {
-          className: "danger",
-        };
-      }
-    }
-  }
 
   const columns = React.useMemo(
     () => [
       {
         Header: "Character",
-        accessor: "character.character_name",
-        Filter: textColumnFilter,
-        filter: "text",
+        accessorKey: "character.character_name",
       },
       {
         Header: "Due Date",
-        accessor: "due_date",
-        Cell: (props) => (
+        accessorKey: "due_date",
+        cell: (props) => (
           <div style={{ whiteSpace: "nowrap" }}>
             {" "}
-            {new Date(props.value).toLocaleString()}{" "}
+            {new Date(props.getValue()).toLocaleString()}{" "}
           </div>
         ),
       },
       {
         Header: "Invoice Reference",
-        accessor: "invoice_ref",
-        Filter: textColumnFilter,
-        filter: "text",
+        accessorKey: "invoice_ref",
         Cell: (props) => (
           <>
-            <CopyToClipboard text={props.value} className="text-center">
+            <CopyToClipboard text={props.getValue()} className="text-center">
               <ButtonGroup bsClass="btn-group special">
                 <Button disabled={props.row.values.paid}>
-                  {props.value.toLocaleString()}
+                  {props.getValue().toLocaleString()}
                 </Button>
                 <Button
-                  disabled={props.row.values.paid}
+                  disabled={props.row.getValue().paid}
                   bsClass="btn no-grow btn-warning"
                 >
                   <Glyphicon glyph="copy" />
@@ -76,18 +50,13 @@ const InvUnpaid = () => {
       },
       {
         Header: "Amount",
-        accessor: "amount",
-        Cell: (props) => (
+        accessorKey: "amount",
+        cell: (props) => (
           <>
-            <CopyToClipboard text={props.value} className="text-center">
+            <CopyToClipboard text={props.getValue()} className="text-center">
               <ButtonGroup bsClass="btn-group special">
-                <Button disabled={props.row.values.paid}>
-                  {props.value.toLocaleString()}
-                </Button>
-                <Button
-                  disabled={props.row.values.paid}
-                  bsClass="btn no-grow btn-warning"
-                >
+                <Button>{props.getValue().toLocaleString()}</Button>
+                <Button bsClass="btn no-grow btn-warning">
                   <Glyphicon glyph="copy" />
                 </Button>
               </ButtonGroup>
@@ -96,64 +65,28 @@ const InvUnpaid = () => {
         ),
       },
       {
-        Header: "",
-        width: 0,
-        accessor: "paid",
-        Cell: (props) =>
-          !props.value ? (
-            <></>
-          ) : (
-            //<Button bsClass="btn btn-danger">
-            //  <Glyphicon glyph="remove" />
-            //</Button>
-            <></>
-
-            //<Button bsClass="btn btn-info">
-            // <Glyphicon glyph="ok" />
-            //</Button>
-          ),
-      },
-      {
         Header: "Details",
-        accessor: "note",
-        Cell: (props) => (
-          <div style={{ whiteSpace: "pre-line" }}>{props.value}</div>
+        accessorKey: "note",
+        cell: (props) => (
+          <div style={{ whiteSpace: "pre-line" }}>{props.getValue()}</div>
         ),
       },
     ],
     []
   );
-  const defaultSort = [
-    {
-      id: "due_date",
-      desc: false,
-    },
-  ];
-
   return (
     <Panel>
       <Panel.Heading>Your Contributions</Panel.Heading>
       <Panel.Body>
-        {!isLoading ? (
-          <BaseTable
-            {...{
-              isLoading,
-              data,
-              columns,
-              error,
-              getRowProps,
-              isFetching,
-              defaultSort,
-            }}
-          />
-        ) : (
-          <p className="text-center">
-            <Bars
-              style={{ margin: "200px", height: "24px" }}
-              className="spinner-size"
-            />
-          </p>
-        )}
+        <BaseTable
+          {...{
+            isLoading,
+            data,
+            columns,
+            error,
+            isFetching,
+          }}
+        />
       </Panel.Body>
     </Panel>
   );

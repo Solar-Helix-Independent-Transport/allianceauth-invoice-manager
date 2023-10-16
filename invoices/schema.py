@@ -27,6 +27,7 @@ class Corporation(Schema):
 
 
 class Invoice(Schema):
+    pk: int
     due_date: datetime
     paid: bool
     note: str
@@ -34,3 +35,4 @@ class Invoice(Schema):
     amount: float
     character: Character
     payment: Optional[WalletEvent]
+    action: Optional[bool]
