@@ -57,10 +57,9 @@ def get_visible_invoices(request):
     chars = request.user.character_ownerships.all().values_list('character')
 
     admin_invoices = models.Invoice.objects.visible_to(
-        request.user).filter(paid=False).exclude(
-        character__in=chars, character__character_ownership__user__isnull=True).annotate(action=Value(request.user.has_perm('invoices.change_invoice'),
-                                                                                                      output_field=BooleanField()))
-
+        request.user).filter(paid=False, character__character_ownership__isnull=False).exclude(
+        character__in=chars).annotate(action=Value(request.user.has_perm('invoices.change_invoice'),
+                                                   output_field=BooleanField()))
     return 200, admin_invoices
 
 
