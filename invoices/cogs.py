@@ -71,10 +71,10 @@ class Invoices(commands.Cog):
             if total+total_overdue > 0:
                 embed.description = f"Please check auth for more info!"
                 embed.add_field(name=f"Total Overdue Invoices",
-                                value=f"${total_overdue:,}",
+                                value=f"Ƶ{total_overdue:,}",
                                 inline=False)
                 embed.add_field(name=f"Total Remaining Invoices",
-                                value=f"${total:,}",
+                                value=f"Ƶ{total:,}",
                                 inline=False)
 
             else:
