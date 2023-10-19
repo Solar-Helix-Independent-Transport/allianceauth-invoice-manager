@@ -66,7 +66,7 @@ class Invoice(models.Model):
                               url=url,
                               color=color)
                     e.add_field(name="Amount",
-                                value=f"${self.amount:,}", inline=False)
+                                value=f"Ƶ{self.amount:,}", inline=False)
                     e.add_field(name="Reference",
                                 value=self.invoice_ref, inline=False)
                     e.add_field(name="Due Date", value=self.due_date.strftime(
