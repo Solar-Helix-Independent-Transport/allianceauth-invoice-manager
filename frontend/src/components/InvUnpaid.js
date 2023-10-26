@@ -11,14 +11,31 @@ const InvUnpaid = () => {
     loadUnpaid()
   );
 
+  function getRowProps(row) {
+    console.log(row.values);
+    if (row.values.paid === true) {
+      return {
+        className: "info",
+      };
+    } else {
+      let now = new Date();
+      let comp = new Date(row.values.due_date);
+      if (comp < now) {
+        return {
+          className: "danger",
+        };
+      }
+    }
+  }
+
   const columns = React.useMemo(
     () => [
       {
-        Header: "Character",
+        header: "Character",
         accessorKey: "character.character_name",
       },
       {
-        Header: "Due Date",
+        header: "Due Date",
         accessorKey: "due_date",
         cell: (props) => (
           <div style={{ whiteSpace: "nowrap" }}>
@@ -28,9 +45,9 @@ const InvUnpaid = () => {
         ),
       },
       {
-        Header: "Invoice Reference",
+        header: "Invoice Reference",
         accessorKey: "invoice_ref",
-        Cell: (props) => (
+        cell: (props) => (
           <>
             <CopyToClipboard text={props.getValue()} className="text-center">
               <ButtonGroup bsClass="btn-group special">
@@ -49,7 +66,7 @@ const InvUnpaid = () => {
         ),
       },
       {
-        Header: "Amount",
+        header: "Amount",
         accessorKey: "amount",
         cell: (props) => (
           <>
@@ -65,7 +82,7 @@ const InvUnpaid = () => {
         ),
       },
       {
-        Header: "Details",
+        header: "Details",
         accessorKey: "note",
         cell: (props) => (
           <div style={{ whiteSpace: "pre-line" }}>{props.getValue()}</div>
@@ -85,6 +102,7 @@ const InvUnpaid = () => {
             columns,
             error,
             isFetching,
+            getRowProps,
           }}
         />
       </Panel.Body>
