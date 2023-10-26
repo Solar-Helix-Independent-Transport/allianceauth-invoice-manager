@@ -37,7 +37,7 @@ const InvVisible = () => {
         enableColumnFilter: false,
         cell: (props) => (
           <div style={{ whiteSpace: "nowrap" }}>
-            {new Date(props.getValue()).toLocaleString()}{" "}
+            {new Date(props.getValue()).toLocaleString()}
           </div>
         ),
       },

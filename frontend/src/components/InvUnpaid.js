@@ -41,10 +41,16 @@ const InvUnpaid = () => {
         header: "Due Date",
         accessorKey: "due_date",
         cell: (props) => (
-          <div style={{ whiteSpace: "nowrap" }}>
-            {" "}
-            {new Date(props.getValue()).toLocaleString()}{" "}
-          </div>
+          <>
+            {props.row.original.paid ? (
+              <span className="label label-success">Paid</span>
+            ) : (
+              <div style={{ whiteSpace: "nowrap" }}>
+                {" "}
+                {new Date(props.getValue()).toLocaleString()}{" "}
+              </div>
+            )}
+          </>
         ),
       },
       {
@@ -52,19 +58,18 @@ const InvUnpaid = () => {
         accessorKey: "invoice_ref",
         cell: (props) => (
           <>
-            <CopyToClipboard text={props.getValue()} className="text-center">
-              <ButtonGroup bsClass="btn-group special">
-                <Button disabled={props.row.values.paid}>
-                  {props.getValue().toLocaleString()}
-                </Button>
-                <Button
-                  disabled={props.row.getValue().paid}
-                  bsClass="btn no-grow btn-warning"
-                >
-                  <Glyphicon glyph="copy" />
-                </Button>
-              </ButtonGroup>
-            </CopyToClipboard>
+            {props.row.original.paid ? (
+              <span className="label label-success">Paid</span>
+            ) : (
+              <CopyToClipboard text={props.getValue()} className="text-center">
+                <ButtonGroup bsClass="btn-group special">
+                  <Button>{props.getValue().toLocaleString()}</Button>
+                  <Button bsClass="btn no-grow btn-warning">
+                    <Glyphicon glyph="copy" />
+                  </Button>
+                </ButtonGroup>
+              </CopyToClipboard>
+            )}
           </>
         ),
       },
@@ -73,14 +78,18 @@ const InvUnpaid = () => {
         accessorKey: "amount",
         cell: (props) => (
           <>
-            <CopyToClipboard text={props.getValue()} className="text-center">
-              <ButtonGroup bsClass="btn-group special">
-                <Button>{props.getValue().toLocaleString()}</Button>
-                <Button bsClass="btn no-grow btn-warning">
-                  <Glyphicon glyph="copy" />
-                </Button>
-              </ButtonGroup>
-            </CopyToClipboard>
+            {props.row.original.paid ? (
+              props.getValue()
+            ) : (
+              <CopyToClipboard text={props.getValue()} className="text-center">
+                <ButtonGroup bsClass="btn-group special">
+                  <Button>{props.getValue().toLocaleString()}</Button>
+                  <Button bsClass="btn no-grow btn-warning">
+                    <Glyphicon glyph="copy" />
+                  </Button>
+                </ButtonGroup>
+              </CopyToClipboard>
+            )}
           </>
         ),
       },
