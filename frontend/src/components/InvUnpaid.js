@@ -11,20 +11,13 @@ const InvUnpaid = () => {
     loadUnpaid()
   );
 
-  function getRowProps(row) {
-    console.log(row.values);
-    if (row.values.paid === true) {
-      return {
-        className: "info",
-      };
+  function past_due(values) {
+    let now = new Date();
+    let comp = new Date(values);
+    if (comp < now) {
+      return "danger";
     } else {
-      let now = new Date();
-      let comp = new Date(row.values.due_date);
-      if (comp < now) {
-        return {
-          className: "danger",
-        };
-      }
+      return "default";
     }
   }
 
@@ -43,10 +36,14 @@ const InvUnpaid = () => {
         cell: (props) => (
           <>
             {props.row.original.paid ? (
-              <span className="label label-success">Paid</span>
+              <div className="text-center">
+                <span className="label label-success">Paid</span>
+              </div>
             ) : (
-              <div style={{ whiteSpace: "nowrap" }}>
-                {" "}
+              <div
+                style={{ whiteSpace: "nowrap" }}
+                className={`text-${past_due(props.getValue())}`}
+              >
                 {new Date(props.getValue()).toLocaleString()}{" "}
               </div>
             )}
@@ -59,11 +56,15 @@ const InvUnpaid = () => {
         cell: (props) => (
           <>
             {props.row.original.paid ? (
-              <span className="label label-success">Paid</span>
+              <div className="text-center">
+                <span className="label label-success">
+                  Paid: {props.getValue()}
+                </span>
+              </div>
             ) : (
               <CopyToClipboard text={props.getValue()} className="text-center">
                 <ButtonGroup bsClass="btn-group special">
-                  <Button>{props.getValue().toLocaleString()}</Button>
+                  <Button>{props.getValue()}</Button>
                   <Button bsClass="btn no-grow btn-warning">
                     <Glyphicon glyph="copy" />
                   </Button>
@@ -79,7 +80,9 @@ const InvUnpaid = () => {
         cell: (props) => (
           <>
             {props.row.original.paid ? (
-              props.getValue()
+              <div className="text-center">
+                {props.getValue().toLocaleString()}
+              </div>
             ) : (
               <CopyToClipboard text={props.getValue()} className="text-center">
                 <ButtonGroup bsClass="btn-group special">
@@ -114,7 +117,6 @@ const InvUnpaid = () => {
             columns,
             error,
             isFetching,
-            getRowProps,
           }}
         />
       </Panel.Body>
