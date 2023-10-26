@@ -33,6 +33,9 @@ const InvUnpaid = () => {
       {
         header: "Character",
         accessorKey: "character.character_name",
+        cell: (props) => (
+          <div style={{ whiteSpace: "nowrap" }}> {props.getValue()} </div>
+        ),
       },
       {
         header: "Due Date",

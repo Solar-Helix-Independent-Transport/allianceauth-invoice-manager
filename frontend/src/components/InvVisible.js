@@ -35,7 +35,6 @@ const InvVisible = () => {
         header: "Due Date",
         accessorKey: "due_date",
         enableColumnFilter: false,
-
         cell: (props) => (
           <div style={{ whiteSpace: "nowrap" }}>
             {new Date(props.getValue()).toLocaleString()}{" "}
