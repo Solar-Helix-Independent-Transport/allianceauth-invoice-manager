@@ -4,7 +4,7 @@ from setuptools import find_packages, setup
 
 install_requires = [
     'allianceauth>=2.9.0',
-    'allianceauth-corptools>=2.1.2'
+    'allianceauth-corptools>=2.5.5'
 ]
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     README = readme.read()
