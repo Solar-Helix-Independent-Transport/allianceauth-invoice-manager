@@ -77,7 +77,7 @@ const InvVisible = () => {
           <>
             <CopyToClipboard text={props.getValue()} className="text-center">
               <ButtonGroup bsClass="btn-group special">
-                <Button>{props.getValue()}</Button>
+                <Button>{props.getValue().toLocaleString()}</Button>
                 <Button bsClass="btn no-grow btn-warning">
                   <Glyphicon glyph="copy" />
                 </Button>

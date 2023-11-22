@@ -109,6 +109,4 @@ def admin_create_tasks(request):
 @login_required
 def react_main(request):
     # get available models
-    ctx = {"js_import": "invoices/invoices-main-" +
-           __version__.replace(".", "-") + ".js"}
-    return render(request, 'invoices/react_base.html', context=ctx)
+    return render(request, 'invoices/react_base.html', context={"version": __version__, "app_name": "invoices", "page_title": "Invoices"})
