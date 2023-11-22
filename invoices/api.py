@@ -36,9 +36,9 @@ api = NinjaAPI(title="Invoice Manager API", version="0.0.1",
 def get_account_invoices(request):
     chars = request.user.character_ownerships.all().values_list('character')
     invoices = models.Invoice.objects.visible_to(
-        request.user).filter(paid=False, character__in=chars)
+        request.user).filter(paid=False, character__in=chars).order_by("due_date")
     paid = models.Invoice.objects.visible_to(
-        request.user).filter(paid=True, character__in=chars)
+        request.user).filter(paid=True, character__in=chars).order_by("-due_date")
     output = []
     for i in invoices:
         output.append(i)

@@ -10,6 +10,19 @@ const InvVisible = () => {
   const { isLoading, isFetching, data } = useQuery("visible", () =>
     loadAllVisible()
   );
+  function past_due(row) {
+    if (row.paid) {
+      return "info";
+    }
+    let value = row.due_date;
+    let now = new Date();
+    let comp = new Date(value);
+    if (comp < now) {
+      return "danger";
+    } else {
+      return "default";
+    }
+  }
 
   const columns = React.useMemo(
     () => [
@@ -105,6 +118,7 @@ const InvVisible = () => {
           <Panel.Heading>Visible Contributions</Panel.Heading>
           <Panel.Body>
             <BaseTable
+              rowClasses={past_due}
               {...{
                 isLoading,
                 data,

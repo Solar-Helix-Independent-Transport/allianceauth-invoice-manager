@@ -11,9 +11,13 @@ const InvUnpaid = () => {
     loadUnpaid()
   );
 
-  function past_due(values) {
+  function past_due(row) {
+    if (row.paid) {
+      return "info";
+    }
+    let value = row.due_date;
     let now = new Date();
-    let comp = new Date(values);
+    let comp = new Date(value);
     if (comp < now) {
       return "danger";
     } else {
@@ -35,18 +39,12 @@ const InvUnpaid = () => {
         accessorKey: "due_date",
         cell: (props) => (
           <>
-            {props.row.original.paid ? (
-              <div className="text-center">
-                <span className="label label-success">Paid</span>
-              </div>
-            ) : (
-              <div
-                style={{ whiteSpace: "nowrap" }}
-                className={`text-${past_due(props.getValue())}`}
-              >
-                {new Date(props.getValue()).toLocaleString()}{" "}
-              </div>
-            )}
+            <div
+              style={{ whiteSpace: "nowrap" }}
+              className={`text-${past_due(props.getValue())}`}
+            >
+              {new Date(props.getValue()).toLocaleString()}{" "}
+            </div>
           </>
         ),
       },
@@ -56,11 +54,12 @@ const InvUnpaid = () => {
         cell: (props) => (
           <>
             {props.row.original.paid ? (
-              <div className="text-center">
-                <span className="label label-success">
-                  Paid: {props.getValue()}
-                </span>
-              </div>
+              <Button
+                bsClass="btn btn-success btn-sm col-xs-12"
+                disabled={true}
+              >
+                {props.getValue()}
+              </Button>
             ) : (
               <CopyToClipboard text={props.getValue()} className="text-center">
                 <ButtonGroup bsClass="btn-group special">
@@ -80,9 +79,12 @@ const InvUnpaid = () => {
         cell: (props) => (
           <>
             {props.row.original.paid ? (
-              <div className="text-center">
+              <Button
+                bsClass="btn btn-success btn-sm col-xs-12"
+                disabled={true}
+              >
                 {props.getValue().toLocaleString()}
-              </div>
+              </Button>
             ) : (
               <CopyToClipboard text={props.getValue()} className="text-center">
                 <ButtonGroup bsClass="btn-group special">
@@ -111,6 +113,7 @@ const InvUnpaid = () => {
       <Panel.Heading>Your Contributions</Panel.Heading>
       <Panel.Body>
         <BaseTable
+          rowClasses={past_due}
           {...{
             isLoading,
             data,
