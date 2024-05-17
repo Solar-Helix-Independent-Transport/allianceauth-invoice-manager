@@ -1,20 +1,17 @@
 import logging
-import os
+from datetime import timedelta
 
 from celery import shared_task
-from allianceauth.eveonline.models import EveCharacter, EveCorporationInfo, EveAllianceInfo
-from django.utils import timezone
-from datetime import timedelta
-from . import app_settings
-from .models import Invoice
 from corptools.models import CorporationWalletJournalEntry
-from allianceauth.services.tasks import QueueOnce
-from allianceauth.notifications import notify
-from django.urls import reverse
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.utils import IntegrityError
-if app_settings.discord_bot_active():
-    import aadiscordbot.tasks
+from django.utils import timezone
+
+from allianceauth.services.tasks import QueueOnce
+
+from . import app_settings
+from .models import Invoice
 
 logger = logging.getLogger(__name__)
 
@@ -36,14 +33,14 @@ def check_for_payments(self):
 
     logger.info(payment_dict)
     for invoice in invoices:
-        logger.info("Checking {}".format(invoice.invoice_ref))
+        logger.info(f"Checking {invoice.invoice_ref}")
         if invoice.invoice_ref in payment_dict:
-            logger.info("Payment Found! {}".format(invoice.invoice_ref))
+            logger.info(f"Payment Found! {invoice.invoice_ref}")
             payment_totals = 0
             for p in payment_dict[invoice.invoice_ref]:
                 payment_totals += p.amount
             if payment_totals >= invoice.amount:
-                logger.info("Payed! {}".format(invoice.invoice_ref))
+                logger.info(f"Payed! {invoice.invoice_ref}")
                 try:
                     invoice.paid = True
                     invoice.payment = payment_dict[invoice.invoice_ref][0]
@@ -67,7 +64,6 @@ def check_for_outstanding(self):
         notified__isnull=True, due_date__lte=date_future) | invoices.filter(notified__lte=date_past)
 
     for inv in invoices:
-        url = reverse("invoices:r_list")
         message = "Please check auth for more info"
         if inv.is_past_due:
             title = "Overdue Contribution"

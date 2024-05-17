@@ -1,24 +1,18 @@
-# Cog Stuff
 import datetime
-from allianceauth.eveonline.models import EveCharacter
-from discord import AllowedMentions, InputTextStyle, Interaction, option
-from discord.ext import commands
-from discord import AutocompleteContext, option
+import logging
+
+from aadiscordbot.app_settings import get_site_url
+from aadiscordbot.cogs.utils.decorators import has_any_perm, sender_has_perm
+from discord import AutocompleteContext, InputTextStyle, Interaction, option
 from discord.embeds import Embed
-from discord.colour import Color
+from discord.ext import commands
 from discord.ui import InputText, Modal
 
-# AA Contexts
 from django.conf import settings
-from django.db import IntegrityError
 from django.utils import timezone
 
-# AA-Discordbot
-from aadiscordbot.cogs.utils.decorators import has_any_perm, sender_has_perm
+from allianceauth.eveonline.models import EveCharacter
 from allianceauth.services.modules.discord.models import DiscordUser
-from aadiscordbot.app_settings import get_site_url
-
-import logging
 
 from invoices.models import Invoice
 
@@ -52,7 +46,6 @@ class Invoices(commands.Cog):
         try:
             has_any_perm(ctx.author.id, ['invoices.access_invoices'])
             await ctx.defer(ephemeral=True)
-            start_time = timezone.now()
             user = DiscordUser.objects.get(uid=ctx.author.id).user
             character_list = user.character_ownerships.all()
             invoices = Invoice.objects.filter(
@@ -68,17 +61,17 @@ class Invoices(commands.Cog):
 
             embed = Embed()
             embed.title = "Invoices!"
-            if total+total_overdue > 0:
-                embed.description = f"Please check auth for more info!"
-                embed.add_field(name=f"Total Overdue Invoices",
+            if total + total_overdue > 0:
+                embed.description = "Please check auth for more info!"
+                embed.add_field(name="Total Overdue Invoices",
                                 value=f"Ƶ{total_overdue:,}",
                                 inline=False)
-                embed.add_field(name=f"Total Remaining Invoices",
+                embed.add_field(name="Total Remaining Invoices",
                                 value=f"Ƶ{total:,}",
                                 inline=False)
 
             else:
-                embed.description = f"No Outstanding Invoices!"
+                embed.description = "No Outstanding Invoices!"
 
             embed.url = get_site_url()
 

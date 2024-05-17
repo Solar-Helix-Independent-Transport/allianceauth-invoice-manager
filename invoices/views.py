@@ -1,19 +1,15 @@
-import os
-from allianceauth.eveonline.evelinks.eveimageserver import corporation_logo_url
-
-from django.db.models import Sum
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
-from django.shortcuts import render, redirect
-from django.utils.translation import gettext_lazy as _
-from .app_settings import PAYMENT_CORP
-from allianceauth.eveonline.models import EveCorporationInfo
-from esi.decorators import token_required
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
 
-from .models import Invoice
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, permission_required
+from django.db.models import Sum
+from django.shortcuts import redirect, render
+
+from allianceauth.eveonline.models import EveCorporationInfo
 
 from . import __version__
+from .app_settings import PAYMENT_CORP
+from .models import Invoice
 
 
 @login_required
@@ -21,7 +17,7 @@ def show_invoices(request):
     try:
         recipt_corp = EveCorporationInfo.objects.get(
             corporation_id=PAYMENT_CORP)
-    except:
+    except Exception:
         recipt_corp = "None"
     chars = request.user.character_ownerships.all().values_list('character')
     admin_invoices = Invoice.objects.visible_to(
@@ -32,7 +28,7 @@ def show_invoices(request):
     admin_isk = admin_invoices.aggregate(total_isk=Sum('amount'))
     completed_invoices = Invoice.objects.visible_to(request.user).filter(
         paid=True, character__in=chars).order_by('-due_date')[:10]
-    if outstanding_isk['total_isk'] == None:
+    if outstanding_isk['total_isk'] is None:
         outstanding = 0
     else:
         outstanding = outstanding_isk['total_isk']
@@ -82,7 +78,7 @@ def admin_create_tasks(request):
                                                                              timezone='UTC'
                                                                              )
 
-    task_check_payments = PeriodicTask.objects.update_or_create(
+    PeriodicTask.objects.update_or_create(
         task='invoices.tasks.check_for_payments',
         defaults={
             'crontab': schedule_check_payments,
@@ -91,7 +87,7 @@ def admin_create_tasks(request):
         }
     )
     # Lets check every 15Mins
-    task_outstanding_payments = PeriodicTask.objects.update_or_create(
+    PeriodicTask.objects.update_or_create(
         task='invoices.tasks.check_for_outstanding',
         defaults={
             'crontab': schedule_outstanding_payments,

@@ -1,5 +1,6 @@
-from .. import app_settings as app_sett
 from django import template
+
+from .. import app_settings as app_sett
 
 register = template.Library()
 

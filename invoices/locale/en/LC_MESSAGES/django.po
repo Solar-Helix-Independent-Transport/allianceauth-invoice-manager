@@ -1,0 +1,142 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-19 18:01+1000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/invoices/admin.html:12 templates/invoices/list.html:13
+#: templates/invoices/react_base.html:72
+msgid "Toggle navigation"
+msgstr ""
+
+#: templates/invoices/admin.html:23 templates/invoices/list.html:24
+#: templates/invoices/react_base.html:83
+msgid "Invoice Managment"
+msgstr ""
+
+#: templates/invoices/admin.html:34
+msgid "Periodic Tasks!"
+msgstr ""
+
+#: templates/invoices/admin.html:36
+msgid "Tasks"
+msgstr ""
+
+#: templates/invoices/admin.html:38
+msgid "Check Payments Task"
+msgstr ""
+
+#: templates/invoices/admin.html:39
+msgid "Outstanding Payments Task"
+msgstr ""
+
+#: templates/invoices/admin.html:41
+msgid "Create or Update Periodic Tasks"
+msgstr ""
+
+#: templates/invoices/list.html:36 templates/invoices/list.html:68
+msgid "Outstanding"
+msgstr ""
+
+#: templates/invoices/list.html:42 templates/invoices/list.html:53
+#, python-format
+msgid ""
+"All Payments are to be made to <a href=\"https://evewho.com/corporation/"
+"%(recipt_corp.corporation_id)s\">%(recipt_corp)s</a><br>All payments made to "
+"other places will not be receipted!"
+msgstr ""
+
+#: templates/invoices/list.html:45
+msgid ""
+"All Payments <b>MUST</b> include the Reference in the Reason "
+"Field<br>Contact an Admin for assistance, if you made an error"
+msgstr ""
+
+#: templates/invoices/list.html:50
+msgid "No Payment Required"
+msgstr ""
+
+#: templates/invoices/list.html:56
+msgid ""
+"All Payments <b>MUST</b> include the Reference in the Reason "
+"Field<br>Contact an Admin for assistance, if you made an error."
+msgstr ""
+
+#: templates/invoices/list.html:64
+msgid "Key"
+msgstr ""
+
+#: templates/invoices/list.html:67 templates/invoices/list.html:89
+msgid "Paid"
+msgstr ""
+
+#: templates/invoices/list.html:69
+msgid "Overdue"
+msgstr ""
+
+#: templates/invoices/list.html:77
+msgid "Your Contributions"
+msgstr ""
+
+#: templates/invoices/list.html:83 templates/invoices/list.html:132
+#: templates/invoices/list.html:139
+msgid "Character"
+msgstr ""
+
+#: templates/invoices/list.html:84 templates/invoices/list.html:133
+msgid "Corporation"
+msgstr ""
+
+#: templates/invoices/list.html:85 templates/invoices/list.html:135
+msgid "Amount"
+msgstr ""
+
+#: templates/invoices/list.html:86 templates/invoices/list.html:136
+msgid "Reference"
+msgstr ""
+
+#: templates/invoices/list.html:87 templates/invoices/list.html:137
+msgid "Due Date"
+msgstr ""
+
+#: templates/invoices/list.html:88 templates/invoices/list.html:138
+msgid "Note"
+msgstr ""
+
+#: templates/invoices/list.html:101
+msgid "No"
+msgstr ""
+
+#: templates/invoices/list.html:112
+msgid "Paid:"
+msgstr ""
+
+#: templates/invoices/list.html:113
+msgid "Yes"
+msgstr ""
+
+#: templates/invoices/list.html:125
+msgid "Outstanding Contributions"
+msgstr ""
+
+#: templates/invoices/list.html:134
+msgid "Alliance"
+msgstr ""
+
+#: templates/invoices/list.html:140
+msgid "Main Character"
+msgstr ""

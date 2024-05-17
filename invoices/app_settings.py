@@ -1,6 +1,7 @@
+import re
+
 from django.apps import apps
 from django.conf import settings
-import re
 
 
 def get_site_url():  # regex sso url

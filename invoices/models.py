@@ -1,23 +1,26 @@
 from collections import defaultdict
-from allianceauth.authentication.models import CharacterOwnership
+from datetime import timedelta
+
+from corptools.models import CorporationWalletJournalEntry
+
+from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
+from django.utils import timezone
+
+from allianceauth.authentication.models import CharacterOwnership
 from allianceauth.eveonline.models import EveCharacter
 from allianceauth.notifications import notify as auth_notify
-from corptools.models import CorporationWalletJournalEntry
-from django.urls import reverse
-from django.contrib.auth.models import User, Group
-from datetime import timedelta
 
 from . import app_settings
 from .managers import InvoiceManager
-from django.utils import timezone
-
 
 if app_settings.discord_bot_active():
     from aadiscordbot import tasks as bot_tasks
     from discord import Embed, Color
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 # CHARACTER_PREPAY_HEADER = f"PREPAY-" # make configurable?
@@ -61,7 +64,7 @@ class Invoice(models.Model):
     note = models.TextField(blank=True, null=True, default=None,)
 
     def __str__(self):
-        return "{} - {} - {}".format(self.character, self.invoice_ref, self.amount)
+        return f"{self.character} - {self.invoice_ref} - {self.amount}"
 
     @property
     def is_past_due(self):
@@ -111,7 +114,7 @@ class Invoice(models.Model):
                     'info'
                 )
         except Exception as e:
-            logger.error(e)
+            logger.exception(e)
             pass  # todo something nicer...
 
     class Meta:
@@ -204,7 +207,7 @@ class TotalInvoicesFilter(FilterBase):
         co = CharacterOwnership.objects.filter(
             user__in=users).select_related('user', 'character')
         chars = {}
-        look_back = timezone.now() - timedelta(days=30*self.months)
+        look_back = timezone.now() - timedelta(days=30 * self.months)
         all_invoices = Invoice.objects.filter(
             character__in=co.values_list('character'), due_date__gte=look_back, paid=self.only_paid)
 

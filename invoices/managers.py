@@ -1,8 +1,6 @@
-from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
 import logging
 
-from allianceauth.eveonline.models import EveCharacter, EveCorporationInfo, EveAllianceInfo
+from django.db import models
 
 logger = logging.getLogger(__name__)
 
