@@ -1,20 +1,22 @@
 [build-system]
-requires = ["flit_core >=3.2,<4"]
 build-backend = "flit_core.buildapi"
+
+requires = [
+    "flit-core>=3.2,<4",
+]
 
 [project]
 name = "allianceauth-invoice-manager"
-dynamic = ["version", "description" ]
 readme = "README.md"
-license = {file = "LICENSE"}
-requires-python = ">=3.8"
-authors = [
-    { name = "AaronKable", email = "aaronkable@gmail.com"}
-]
 keywords = [
     "allianceauth",
     "eveonline",
 ]
+license = { file = "LICENSE" }
+authors = [
+    { name = "AaronKable", email = "aaronkable@gmail.com" },
+]
+requires-python = ">=3.8"
 classifiers = [
     "Environment :: Web Environment",
     "Framework :: Celery",
@@ -25,7 +27,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -33,17 +35,20 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Internet :: WWW/HTTP",
-    "Topic :: Internet :: WWW/HTTP :: Dynamic Content"
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
+dynamic = [
+    "description",
+    "version",
 ]
 dependencies = [
-    "allianceauth>=3.0.0,<5.0.0",
-    "allianceauth-corptools>=2.1.2"
+    "allianceauth>=3,<5",
+    "allianceauth-corptools>=2.1.2",
 ]
 
-[project.urls]
-Home = "https://github.com/Solar-Helix-Independent-Transport/allianceauth-invoice-manager"
-Source = "hhttps://github.com/Solar-Helix-Independent-Transport/allianceauth-invoice-manager"
-Tracker = "https://github.com/Solar-Helix-Independent-Transport/allianceauth-invoice-manager"
+urls.Home = "https://github.com/Solar-Helix-Independent-Transport/allianceauth-invoice-manager"
+urls.Source = "hhttps://github.com/Solar-Helix-Independent-Transport/allianceauth-invoice-manager"
+urls.Tracker = "https://github.com/Solar-Helix-Independent-Transport/allianceauth-invoice-manager"
 
 [tool.flit.module]
 name = "invoices"
@@ -57,19 +62,44 @@ sections = [
     "DJANGO",
     "ALLIANCEAUTH",
     "FIRSTPARTY",
-    "LOCALFOLDER"
+    "LOCALFOLDER",
 ]
-known_allianceauth = ["allianceauth", "esi"]
-known_django = ["django"]
+known_allianceauth = [
+    "allianceauth",
+    "esi",
+]
+known_django = [
+    "django",
+]
 skip_gitignore = true
 
 [tool.flake8]
-exclude = [".git", "*migrations*", ".tox", "dist", "htmlcov"]
+exclude = [
+    ".git",
+    "*migrations*",
+    ".tox",
+    "dist",
+    "htmlcov",
+]
 max-line-length = 119
-select = ["C", "E", "F", "W", "B", "B950"]
-ignore = ['E203', 'E231', 'E501', 'W503', 'W291', 'W293']
+select = [
+    "C",
+    "E",
+    "F",
+    "W",
+    "B",
+    "B950",
+]
+ignore = [
+    'E203',
+    'E231',
+    'E501',
+    'W503',
+    'W291',
+    'W293',
+]
 
 [tool.djlint]
-max_attribute_length=119
-max_line_length=119
-max_blank_lines=1
+max_attribute_length = 119
+max_line_length = 119
+max_blank_lines = 1

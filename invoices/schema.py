@@ -1,7 +1,7 @@
 from datetime import datetime
-from ninja import Schema
+from typing import Optional
 
-from typing import Optional, List, Dict
+from ninja import Schema
 
 
 class Message(Schema):

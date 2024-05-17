@@ -1,11 +1,10 @@
-from allianceauth.services.hooks import MenuItemHook, UrlHook
-from django.utils.translation import gettext_lazy as _
 from allianceauth import hooks
+from allianceauth.services.hooks import MenuItemHook, UrlHook
 
-from .models import Invoice
-from . import app_settings
-from . import urls
 from invoices import models
+
+from . import app_settings, urls
+from .models import Invoice
 
 
 class Invoices(MenuItemHook):
