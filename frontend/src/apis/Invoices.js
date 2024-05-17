@@ -27,7 +27,7 @@ export async function loadPaymentCorp() {
 export async function postPayInvoice(id) {
   console.log(`Sent payment for invoice`);
   const api = await axios.post(
-    `/invoice/api//admin/paid/${id}`,
+    `/invoice/api/admin/paid/${id}`,
     { id: id },
     { headers: { "X-CSRFToken": cookies.getItem("csrftoken") } }
   );

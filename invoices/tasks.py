@@ -27,9 +27,9 @@ def check_for_payments(self):
                                                             amount__gt=1)
     payment_dict = {}
     for payment in payments:
-        if payment.reason not in payment_dict:
-            payment_dict[payment.reason] = []
-        payment_dict[payment.reason].append(payment)
+        if payment.reason.strip() not in payment_dict:
+            payment_dict[payment.reason.strip()] = []
+        payment_dict[payment.reason.strip()].append(payment)
 
     logger.info(payment_dict)
     for invoice in invoices:

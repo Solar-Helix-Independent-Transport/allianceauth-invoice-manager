@@ -30,3 +30,11 @@ def discord_bot_active():
         if int(version[0]) >= 3:
             return True
     return False
+
+
+INVOICES_SEND_AUTH_NOTIFICATIONS = getattr(
+    settings, "INVOICES_SEND_AUTH_NOTIFICATIONS", True)
+
+
+INVOICES_SEND_DISCORD_BOT_NOTIFICATIONS = getattr(
+    settings, "INVOICES_SEND_DISCORD_BOT_NOTIFICATIONS", True)

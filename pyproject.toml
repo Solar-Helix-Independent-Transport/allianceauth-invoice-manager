@@ -43,7 +43,7 @@ dynamic = [
 ]
 dependencies = [
     "allianceauth>=3,<5",
-    "allianceauth-corptools>=2.1.2",
+    "allianceauth-corptools>=2.5.5"
 ]
 
 urls.Home = "https://github.com/Solar-Helix-Independent-Transport/allianceauth-invoice-manager"

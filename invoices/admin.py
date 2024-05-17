@@ -11,8 +11,10 @@ from .models import Invoice
 class InvoicesAdmin(admin.ModelAdmin):
 
     list_select_related = True
-    list_display = ['character', 'invoice_ref', 'amount', 'paid']
-    search_fields = ('character__character_name', 'invoice_ref')
+    list_display = ['character', 'invoice_ref',
+                    'amount', 'paid', 'marked_paid_by']
+    search_fields = ('character__character_name', 'invoice_ref',
+                     'marked_paid_by__character_name')
     raw_id_fields = ('character', 'payment')
 
 

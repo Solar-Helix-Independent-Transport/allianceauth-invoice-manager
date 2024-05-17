@@ -1,0 +1,16 @@
+{
+  "_@libs-GjwcVrZE.js": {
+    "file": "assets/@libs-GjwcVrZE.js"
+  },
+  "index.html": {
+    "css": [
+      "assets/index-AA1-fSBX.css"
+    ],
+    "file": "assets/index-CE86i7-H.js",
+    "imports": [
+      "_@libs-GjwcVrZE.js"
+    ],
+    "isEntry": true,
+    "src": "index.html"
+  }
+}

@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-
+from decimal import Decimal
 from ninja import Schema
 
 
@@ -9,21 +9,21 @@ class Message(Schema):
 
 
 class WalletEvent(Schema):
-    amount: int
+    amount: Decimal
     date: datetime
 
 
 class Character(Schema):
     character_name: str
     corporation_name: str
-    alliance_name: Optional[str]
+    alliance_name: Optional[str] = None
 
 
 class Corporation(Schema):
     corporation_name: str
-    alliance_name: Optional[str]
+    alliance_name: Optional[str] = None
     corporation_id: int
-    alliance_id: Optional[int]
+    alliance_id: Optional[int] = None
 
 
 class Invoice(Schema):
@@ -34,5 +34,5 @@ class Invoice(Schema):
     invoice_ref: str
     amount: float
     character: Character
-    payment: Optional[WalletEvent]
-    action: Optional[bool]
+    payment: Optional[WalletEvent] = None
+    action: Optional[bool] = None
