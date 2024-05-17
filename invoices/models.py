@@ -91,7 +91,7 @@ class Invoice(models.Model):
                 'info'
             )
         except Exception as e:
-            logger.error(e)
+            logger.exception(e)
             pass  # todo something nicer...
 
     class Meta:
@@ -163,7 +163,7 @@ class NoOverdueFilter(FilterBase):
 
 
 class TotalInvoicesFilter(FilterBase):
-    #ignore_groups = models.ManyToManyField(Group, blank=True)
+    # ignore_groups = models.ManyToManyField(Group, blank=True)
     min_amount = models.BigIntegerField(default=5000000000)
     swap_logic = models.BooleanField(default=False)
     only_paid = models.BooleanField(default=True)
