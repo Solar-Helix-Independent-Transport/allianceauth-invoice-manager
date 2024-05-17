@@ -10,6 +10,19 @@ const InvVisible = () => {
   const { isLoading, isFetching, data } = useQuery("visible", () =>
     loadAllVisible()
   );
+  function past_due(row) {
+    if (row.paid) {
+      return "info";
+    }
+    let value = row.due_date;
+    let now = new Date();
+    let comp = new Date(value);
+    if (comp < now) {
+      return "danger";
+    } else {
+      return "default";
+    }
+  }
 
   const columns = React.useMemo(
     () => [
@@ -35,10 +48,9 @@ const InvVisible = () => {
         header: "Due Date",
         accessorKey: "due_date",
         enableColumnFilter: false,
-
         cell: (props) => (
           <div style={{ whiteSpace: "nowrap" }}>
-            {new Date(props.getValue()).toLocaleString()}{" "}
+            {new Date(props.getValue()).toLocaleString()}
           </div>
         ),
       },
@@ -65,7 +77,7 @@ const InvVisible = () => {
           <>
             <CopyToClipboard text={props.getValue()} className="text-center">
               <ButtonGroup bsClass="btn-group special">
-                <Button>{props.getValue()}</Button>
+                <Button>{props.getValue().toLocaleString()}</Button>
                 <Button bsClass="btn no-grow btn-warning">
                   <Glyphicon glyph="copy" />
                 </Button>
@@ -106,6 +118,7 @@ const InvVisible = () => {
           <Panel.Heading>Visible Contributions</Panel.Heading>
           <Panel.Body>
             <BaseTable
+              rowClasses={past_due}
               {...{
                 isLoading,
                 data,
