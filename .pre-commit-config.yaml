@@ -97,7 +97,7 @@ repos:
       - id: yesqa
   # Infrastructure
   - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: 1.7.0
+    rev: 2.1.1
     hooks:
       - id: pyproject-fmt
         name: pyproject.toml formatter
@@ -108,7 +108,7 @@ repos:
           - tox==4.14.2 # https://github.com/tox-dev/tox/releases/latest
 
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: v0.16
+    rev: v0.17
     hooks:
       - id: validate-pyproject
         name: Validate pyproject.toml
