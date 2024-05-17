@@ -7,6 +7,9 @@ from allianceauth.project_template.project_name.settings.base import *  # noqa
 # Celery configuration
 CELERY_ALWAYS_EAGER = True  # Forces celery to run locally for testing
 
+SITE_URL = "https://example.com"
+CSRF_TRUSTED_ORIGINS = [SITE_URL]
+
 INSTALLED_APPS += [  # noqa
     'invoices',
     'corptools'
