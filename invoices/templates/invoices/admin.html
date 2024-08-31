@@ -1,53 +1,71 @@
-{% extends 'allianceauth/base.html' %}
+{% extends "allianceauth/base.html" %}
 {% load i18n %}
 {% load humanize %}
 {% load invoices %}
-{% block page_title %}{% invoice_app_name %}{% endblock %}
+{% block page_title %}
+    {% invoice_app_name %}
+{% endblock page_title %}
 {% block content %}
-<br>
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{% url 'invoices:r_list' %}">{% invoice_app_name %}</a>
+    <br />
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button"
+                        class="navbar-toggle collapsed"
+                        data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1"
+                        aria-expanded="false">
+                    <span class="sr-only">%{% translate "Toggle navigation" %}%</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'invoices:r_list' %}">{% invoice_app_name %}</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    {% if perms.invoices.admin %}
+                        <li>
+                            <a class="" href="{% url 'invoices:admin' %}">{% translate "Invoice Managment" %}</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+
         </div>
+    </nav>
 
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                {% if perms.invoices.admin %}
-                 <li><a class="" href="{% url 'invoices:admin' %}">Invoice Managment</a></li>
-                {% endif %}
-            </ul>
-        </div>
-
-    </div>
-</nav>
-
-<div class="col-lg-12">
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-heading text-center">Periodic Tasks!</div>
-            <div class="panel-body text-center">
-                <h4>Tasks</h4>
-                <table class="table">
-                    <tr><td class="text-left">Check Payments Task</td><td class="text-right"><span class="badge">{{check_payments}}</span></td></tr>
-                    <tr><td class="text-left">Outstanding Payments Task</td><td class="text-right"><span class="badge">{{outstanding_payments}}</span></td></tr>
-                </table>
-                <a class="btn col-md-12 btn-primary" href="{% url 'invoices:admin_create_tasks' %}">Create or Update Periodic Tasks</a>
+    <div class="col-lg-12">
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading text-center">{% translate "Periodic Tasks!" %}</div>
+                <div class="panel-body text-center">
+                    <h4>{% translate "Tasks" %}</h4>
+                    <table class="table">
+                        <tr>
+                            <td class="text-left">{% translate "Check Payments Task" %}</td>
+                            <td class="text-right">
+                                <span class="badge">{{ check_payments }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">{% translate "Outstanding Payments Task" %}</td>
+                            <td class="text-right">
+                                <span class="badge">{{ outstanding_payments }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <a class="btn col-md-12 btn-primary" href="{% url 'invoices:admin_create_tasks' %}">{% translate "Create or Update Periodic Tasks" %}</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 {% endblock %}
 
 {% block extra_css %}
-{% endblock %}
+{% endblock extra_css %}
 
 {% block extra_script %}
-{% endblock %}}
+{% endblock extra_script %}

@@ -1,24 +1,16 @@
+import logging
 from typing import List
-from allianceauth import notifications
-from corptools import app_settings
-from django.utils.timezone import activate
 
-from ninja import NinjaAPI, Form, main
+from ninja import NinjaAPI
 from ninja.security import django_auth
-from ninja.responses import codes_4xx
+
+from django.conf import settings
+from django.db.models import BooleanField, Value
 
 from allianceauth.eveonline.models import EveCorporationInfo
-from django.core.exceptions import PermissionDenied
-from django.db.models import F, Sum, Q
-from allianceauth.eveonline.models import EveCharacter
-from django.conf import settings
+
+from . import models, schema
 from .app_settings import PAYMENT_CORP
-from django.db.models import Value, BooleanField
-
-from . import models
-from . import schema
-
-import logging
 
 logger = logging.getLogger(__name__)
 
