@@ -22,9 +22,9 @@ The `ToDo` List:
 1. Install the app `pip install -U allianceauth-invoices`
 2. Add `'invoices',` to your `INSTALLED_APPS` in your projects `local.py`
 3. run migrations, collect static and restart auth
-    - `python manage.py migrate invoices`
-    - `python manage.py collectstatic`
-    - `supervisorctrl restart all`
+   - `python manage.py migrate invoices`
+   - `python manage.py collectstatic`
+   - `supervisorctrl restart all`
 4. go go the following address to set up default cron tasks `AUTH ADDRESS/invoice/admin_create_tasks/`
 5. setup your perms as documented below
 6. add characters and corp tokens as required
@@ -34,9 +34,9 @@ The `ToDo` List:
 
 1. Install the app `pip install -U allianceauth-invoices`
 2. run migrations, collect static and restart auth
-    - `python manage.py migrate invoices`
-    - `python manage.py collectstatic`
-    - `supervisorctrl restart all`
+   - `python manage.py migrate invoices`
+   - `python manage.py collectstatic`
+   - `supervisorctrl restart all`
 
 ## Set Corp ID
 

@@ -1,5 +1,0 @@
-recursive-include invoices/templates *
-recursive-include invoices/static *
-recursive-include invoices/ *.py
-include LICENSE
-include README.md
