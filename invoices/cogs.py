@@ -1,7 +1,7 @@
 import datetime
 import logging
 
-from aadiscordbot.app_settings import get_site_url
+from aadiscordbot.app_settings import get_site_url, get_all_servers
 from aadiscordbot.cogs.utils.decorators import has_any_perm, sender_has_perm
 from discord import AutocompleteContext, InputTextStyle, Interaction, option
 from discord.embeds import Embed
@@ -38,13 +38,13 @@ class Invoices(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.slash_command(name='invoices', guild_ids=[int(settings.DISCORD_GUILD_ID)])
+    @commands.slash_command(name='invoices', guild_ids=get_all_servers())
     async def invoices(self, ctx):
         """
         Show your current invoices
         """
         try:
-            has_any_perm(ctx.author.id, ['invoices.access_invoices'])
+            has_any_perm(ctx.author.id, guild=ctx.guild, perms=['invoices.access_invoices'])
             await ctx.defer(ephemeral=True)
             user = DiscordUser.objects.get(uid=ctx.author.id).user
             character_list = user.character_ownerships.all()
@@ -130,7 +130,7 @@ class Invoices(commands.Cog):
                 await interaction.response.send_message(e, ephemeral=True)
             self.stop()
 
-    @commands.message_command(name="Fine User for Message", guild_ids=[int(settings.DISCORD_GUILD_ID)])
+    @commands.message_command(name="Fine User for Message", guild_ids=get_all_servers())
     @sender_has_perm("invoices.add_invoice")
     async def new_invoice_message(self, ctx, message):
         user_to_fine = DiscordUser.objects.get(
@@ -141,7 +141,7 @@ class Invoices(commands.Cog):
             user_who_fine, user_to_fine, message)
         await ctx.send_modal(ask_for_reason_text)
 
-    @commands.user_command(name="Fine User", guild_ids=[int(settings.DISCORD_GUILD_ID)])
+    @commands.user_command(name="Fine User", guild_ids=get_all_servers())
     @sender_has_perm("invoices.add_invoice")
     async def new_invoice_user(self, ctx, user):
         user_to_fine = DiscordUser.objects.get(
@@ -152,7 +152,7 @@ class Invoices(commands.Cog):
             user_who_fine, user_to_fine)
         await ctx.send_modal(ask_for_reason_text)
 
-    @commands.slash_command(name='new_invoice', guild_ids=[int(settings.DISCORD_GUILD_ID)])
+    @commands.slash_command(name='new_invoice', guild_ids=get_all_servers())
     @option("character", description="Character to invoice!", autocomplete=search_characters)
     @option("amount", description="Amount to invoice", type=str)
     @option("reason", description="Reason to put on invoice!", type=str)
