@@ -94,8 +94,7 @@ class Invoice(models.Model):
                     e.add_field(name="Due Date", value=self.due_date.strftime(
                         "%Y/%m/%d"), inline=False)
                     if app_settings.INVOICES_SEND_DISCORD_BOT_NOTIFICATIONS:
-                        bot_tasks.send_message(user_id=u.discord.uid,
-                                               embed=e)
+                        bot_tasks.send_message(user=u, embed=e)
                 except Exception as e:
                     logger.error(e, exc_info=True)
                     pass
