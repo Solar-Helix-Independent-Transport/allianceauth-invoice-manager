@@ -6,7 +6,7 @@ requires = [
 ]
 
 [project]
-name = "allianceauth-invoice-manager"
+name = "allianceauth-invoice"
 readme = "README.md"
 keywords = [
     "allianceauth",
