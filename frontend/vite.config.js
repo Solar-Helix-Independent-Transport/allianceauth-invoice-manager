@@ -7,25 +7,10 @@ export default defineConfig({
   server: {
     port: 3002,
     proxy: {
-      "/reports/api/": {
+      "/invoice/api/": {
         target: "http://localhost:8000",
         changeOrigin: true,
         secure: false,
-        configure: (proxy, _options) => {
-          proxy.on("error", (err, _req, _res) => {
-            console.log("proxy error", err);
-          });
-          proxy.on("proxyReq", (proxyReq, req, _res) => {
-            console.log("Sending Request to the Target:", req.method, req.url);
-          });
-          proxy.on("proxyRes", (proxyRes, req, _res) => {
-            console.log(
-              "Received Response from the Target:",
-              proxyRes.statusCode,
-              req.url
-            );
-          });
-        },
       },
     },
   },
@@ -35,6 +20,14 @@ export default defineConfig({
     outDir: "build/static/",
     rollupOptions: {
       output: {
+        assetFileNames: (assetInfo) => {
+          let extType = assetInfo.name.split(".").at(1);
+          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
+            extType = "img";
+          }
+          // fake the path, we copy them over properly later
+          return `static/invoices/static/${extType}/[name]-[hash][extname]`;
+        },
         manualChunks(id) {
           // creating a chunk to react routes deps. Reducing the vendor chunk size
           if (id.includes("react-router-dom") || id.includes("react-router")) {

@@ -11,5 +11,4 @@ urlpatterns = [
     path('admin/', views.show_admin, name='admin'),
     path('admin_create_tasks/', views.admin_create_tasks, name='admin_create_tasks'),
     re_path(r'^api/', api.urls),
-
 ]

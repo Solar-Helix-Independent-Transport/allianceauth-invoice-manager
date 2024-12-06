@@ -33,9 +33,8 @@ buildjs:
 
 package:
 	cd frontend;yarn install;yarn build;
-	pip install flit
-	flit build
-
+	pip install hatch
+	hatch build
 
 devjs:
 	cd frontend;yarn install;yarn start

@@ -4,9 +4,9 @@
   },
   "index.html": {
     "css": [
-      "assets/index-AA1-fSBX.css"
+      "static/invoices/static/css/index-AA1-fSBX.css"
     ],
-    "file": "assets/index-CE86i7-H.js",
+    "file": "assets/index-L5Z108-M.js",
     "imports": [
       "_@libs-GjwcVrZE.js"
     ],

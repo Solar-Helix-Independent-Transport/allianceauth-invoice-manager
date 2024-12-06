@@ -1,1 +1,16 @@
-../../../frontend/build/static/.vite/manifest.json
+{
+  "_@libs-GjwcVrZE.js": {
+    "file": "assets/@libs-GjwcVrZE.js"
+  },
+  "index.html": {
+    "css": [
+      "static/invoices/static/css/index-AA1-fSBX.css"
+    ],
+    "file": "assets/index-L5Z108-M.js",
+    "imports": [
+      "_@libs-GjwcVrZE.js"
+    ],
+    "isEntry": true,
+    "src": "index.html"
+  }
+}
