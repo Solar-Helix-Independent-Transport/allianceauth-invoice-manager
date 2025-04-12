@@ -37,9 +37,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc; vite build",
-    "tsc": "tsc",
-    "postbuild": "./copy-assets.sh"
+    "build": "tsc; vite build && ./copy-assets.sh",
+    "tsc": "tsc"
   },
   "eslintConfig": {
     "extends": [
