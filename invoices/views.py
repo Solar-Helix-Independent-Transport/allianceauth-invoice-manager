@@ -105,4 +105,4 @@ def admin_create_tasks(request):
 @login_required
 def react_main(request):
     # get available models
-    return render(request, 'invoices/react_base.html', context={"version": __version__, "app_name": "invoices", "page_title": "Invoices"})
+    return render(request, 'invoices/react_base_bs5.html', context={"version": __version__, "app_name": "invoices", "page_title": "Invoices"})

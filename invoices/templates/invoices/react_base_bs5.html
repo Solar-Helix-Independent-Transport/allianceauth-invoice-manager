@@ -1,8 +1,10 @@
 {% extends 'allianceauth/base-bs5.html' %}
 {% load i18n %}
 {% block page_title %}{{page_title}}{% endblock %}
+
+{% get_current_language as LANGUAGE_CODE %}
 {% block content %}
-  <div id="root">
+  <div id="root" lang="{{LANGUAGE_CODE}}">
     <div id="app">
         <div id="loading-div" class="flex-container-main ">
             <div class="text-center">
