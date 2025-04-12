@@ -1,9 +1,9 @@
 import React from "react";
-import { Button, Panel, Glyphicon, ButtonGroup } from "react-bootstrap";
+import { Button, Card, ButtonGroup } from "react-bootstrap";
 
 import { useQuery } from "react-query";
 import { loadUnpaid } from "../apis/Invoices";
-import { BaseTable } from "@pvyparts/allianceauth-components";
+import BaseTable from "../components/Tables/BaseTable/BaseTable";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const InvUnpaid = () => {
@@ -11,27 +11,14 @@ const InvUnpaid = () => {
     loadUnpaid()
   );
 
-  function past_due(row) {
-    if (row.paid) {
-      return "info";
-    }
-    let value = row.due_date;
-    let now = new Date();
-    let comp = new Date(value);
-    if (comp < now) {
-      return "danger";
-    } else {
-      return "default";
-    }
-  }
-
   const columns = React.useMemo(
     () => [
       {
         header: "Character",
         accessorKey: "character.character_name",
-        cell: (props) => (
-          <div style={{ whiteSpace: "nowrap" }}> {props.getValue()} </div>
+        cell: (cell) => (
+          //className={`bg-${past_due(cell.row.original)}`}
+          <div style={{ whiteSpace: "nowrap" }}> {cell.getValue()} </div>
         ),
       },
       {
@@ -39,10 +26,7 @@ const InvUnpaid = () => {
         accessorKey: "due_date",
         cell: (props) => (
           <>
-            <div
-              style={{ whiteSpace: "nowrap" }}
-              className={`text-${past_due(props.getValue())}`}
-            >
+            <div style={{ whiteSpace: "nowrap" }}>
               {new Date(props.getValue()).toLocaleString()}{" "}
             </div>
           </>
@@ -52,7 +36,7 @@ const InvUnpaid = () => {
         header: "Invoice Reference",
         accessorKey: "invoice_ref",
         cell: (props) => (
-          <>
+          <div className="float-end">
             {props.row.original.paid ? (
               <Button
                 bsClass="btn btn-success btn-sm col-xs-12"
@@ -65,12 +49,12 @@ const InvUnpaid = () => {
                 <ButtonGroup bsClass="btn-group special">
                   <Button>{props.getValue()}</Button>
                   <Button bsClass="btn no-grow btn-warning">
-                    <Glyphicon glyph="copy" />
+                    <i class="fa-solid fa-copy"></i>
                   </Button>
                 </ButtonGroup>
               </CopyToClipboard>
             )}
-          </>
+          </div>
         ),
       },
       {
@@ -90,7 +74,7 @@ const InvUnpaid = () => {
                 <ButtonGroup bsClass="btn-group special">
                   <Button>{props.getValue().toLocaleString()}</Button>
                   <Button bsClass="btn no-grow btn-warning">
-                    <Glyphicon glyph="copy" />
+                    <i class="fa-solid fa-copy"></i>
                   </Button>
                 </ButtonGroup>
               </CopyToClipboard>
@@ -109,21 +93,22 @@ const InvUnpaid = () => {
     []
   );
   return (
-    <Panel>
-      <Panel.Heading>Your Contributions</Panel.Heading>
-      <Panel.Body>
-        <BaseTable
-          rowClasses={past_due}
-          {...{
-            isLoading,
-            data,
-            columns,
-            error,
-            isFetching,
-          }}
-        />
-      </Panel.Body>
-    </Panel>
+    <div className="p-1">
+      <Card>
+        <Card.Header><Card.Title>Your Contributions</Card.Title></Card.Header>
+        <Card.Body>
+          <BaseTable
+            {...{
+              isLoading,
+              data,
+              columns,
+              error,
+              isFetching,
+            }}
+          />
+        </Card.Body>
+      </Card>
+    </div>
   );
 };
 

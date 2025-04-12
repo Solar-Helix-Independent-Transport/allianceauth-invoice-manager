@@ -8,7 +8,7 @@ const InvPaymentDetail = () => {
   );
 
   return (
-    <>
+    <div className="d-flex">
       <div className="col-sm-6">
         <p className="text-center">
           <small>
@@ -34,7 +34,7 @@ const InvPaymentDetail = () => {
           </small>
         </p>
       </div>
-    </>
+    </div>
   );
 };
 

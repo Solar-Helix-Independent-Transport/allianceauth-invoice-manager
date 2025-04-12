@@ -4,7 +4,7 @@ import { loadUnpaid } from "../apis/Invoices";
 import { Bars } from "@agney/react-loading";
 import InvPaymentDetail from "./InvPaymnetDetail";
 import { Col, Row } from "react-bootstrap";
-import { Panel } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 
 const InvMenu = () => {
   const { isLoading, error, data } = useQuery("unpaid", () => loadUnpaid());
@@ -21,23 +21,35 @@ const InvMenu = () => {
     : (amountDue = 0);
 
   return (
-    <Row>
-      <Col md={8}>
-        <Panel
-          bsStyle={
-            isLoading
-              ? "info"
-              : !error
-              ? amountDue > 0
-                ? "warning"
-                : "success"
-              : "danger"
-          }
+    <Row className="flex-row align-content-stretch">
+      <div className="w-75 ps-3 pb-1 pe-1">
+        <Card
+          className={`
+            ${
+              isLoading
+                ? "border-info"
+                : !error
+                ? amountDue > 0
+                  ? "border-warning"
+                  : "border-success"
+                : "border-danger"
+            }`}
         >
-          <Panel.Heading className="text-center">
-            <h3 className="panel-title">Outstanding</h3>
-          </Panel.Heading>
-          <Panel.Body>
+          <Card.Header
+            className={`text-center 
+            ${
+              isLoading
+                ? "border-info"
+                : !error
+                ? amountDue > 0
+                  ? "border-warning bg-warning text-dark"
+                  : "border-success bg-success"
+                : "border-danger"
+            }`}
+          >
+            <Card.Title>Outstanding</Card.Title>
+          </Card.Header>
+          <Card.Body>
             <Col sm={12}>
               <h3 className="text-center">
                 {isLoading ? (
@@ -56,36 +68,33 @@ const InvMenu = () => {
                 )}
               </h3>
               <br />
-              {InvPaymentDetail()}
+              <InvPaymentDetail />
             </Col>
-          </Panel.Body>
-        </Panel>
-      </Col>
-      <Col md={4}>
-        <div className="panel panel-default">
-          <div className="panel-heading text-center">
-            <h3 className="panel-title">Key</h3>
-          </div>
-          <div className="panel-body">
-            <table
-              className="table table-hover text-center"
-              style={{ width: "100%" }}
-            >
+          </Card.Body>
+        </Card>
+      </div>
+      <div className="w-25 pe-3 pb-1 ps-1">
+        <Card className="h-100">
+          <Card.Header className="text-center">
+            <Card.Title>Key</Card.Title>
+          </Card.Header>
+          <Card.Body>
+            <table className="table text-center mb-0">
               <tbody>
-                <tr className="info">
-                  <td>Paid</td>
+                <tr>
+                  <td className="bg-info bg-opacity-25">Paid</td>
                 </tr>
-                <tr className="">
-                  <td>Outstanding</td>
+                <tr>
+                  <td className="">Outstanding</td>
                 </tr>
-                <tr className="danger">
-                  <td>Overdue</td>
+                <tr>
+                  <td className="bg-danger bg-opacity-25">Overdue</td>
                 </tr>
               </tbody>
             </table>
-          </div>
-        </div>
-      </Col>
+          </Card.Body>
+        </Card>
+      </div>
     </Row>
   );
 };

@@ -1,8 +1,8 @@
 import React from "react";
 import { useQuery } from "react-query";
 import { loadAllVisible } from "../apis/Invoices";
-import { BaseTable } from "@pvyparts/allianceauth-components";
-import { Button, Panel, Glyphicon, ButtonGroup } from "react-bootstrap";
+import BaseTable from "../components/Tables/BaseTable/BaseTable";
+import { Button, Card, ButtonGroup } from "react-bootstrap";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import PaidButton from "./PaidButton";
 
@@ -10,19 +10,6 @@ const InvVisible = () => {
   const { isLoading, isFetching, data } = useQuery("visible", () =>
     loadAllVisible()
   );
-  function past_due(row) {
-    if (row.paid) {
-      return "info";
-    }
-    let value = row.due_date;
-    let now = new Date();
-    let comp = new Date(value);
-    if (comp < now) {
-      return "danger";
-    } else {
-      return "default";
-    }
-  }
 
   const columns = React.useMemo(
     () => [
@@ -58,16 +45,16 @@ const InvVisible = () => {
         header: "Invoice Reference",
         accessorKey: "invoice_ref",
         cell: (props) => (
-          <>
+          <div className="float-end">
             <CopyToClipboard text={props.getValue()} className="text-center">
               <ButtonGroup bsClass="btn-group special">
                 <Button>{props.getValue().toLocaleString()}</Button>
                 <Button bsClass="btn no-grow btn-warning">
-                  <Glyphicon glyph="copy" />
+                  <i class="fa-solid fa-copy"></i>
                 </Button>
               </ButtonGroup>
             </CopyToClipboard>
-          </>
+          </div>
         ),
       },
       {
@@ -79,7 +66,7 @@ const InvVisible = () => {
               <ButtonGroup bsClass="btn-group special">
                 <Button>{props.getValue().toLocaleString()}</Button>
                 <Button bsClass="btn no-grow btn-warning">
-                  <Glyphicon glyph="copy" />
+                  <i class="fa-solid fa-copy"></i>
                 </Button>
               </ButtonGroup>
             </CopyToClipboard>
@@ -114,21 +101,22 @@ const InvVisible = () => {
   return (
     <>
       {!isLoading ? (
-        <Panel>
-          <Panel.Heading>Visible Contributions</Panel.Heading>
-          <Panel.Body>
-            <BaseTable
-              rowClasses={past_due}
-              {...{
-                isLoading,
-                data,
-                columns,
-                initialState,
-                isFetching,
-              }}
-            />
-          </Panel.Body>
-        </Panel>
+        <div className="p-1">
+          <Card>
+            <Card.Header><Card.Title>Visible Contributions</Card.Title></Card.Header>
+            <Card.Body>
+              <BaseTable
+                {...{
+                  isLoading,
+                  data,
+                  columns,
+                  initialState,
+                  isFetching,
+                }}
+              />
+            </Card.Body>
+          </Card>
+        </div>
       ) : (
         <></>
       )}

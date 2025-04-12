@@ -1,6 +1,7 @@
 import tableStyles from "./BaseTable.module.css";
 import Filter from "./BaseTableFilter";
 import {
+  Cell,
   ColumnDef,
   Header,
   HeaderGroup,
@@ -29,10 +30,32 @@ import {
   Table,
   Tooltip,
 } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
 
 function MyTooltip(message: string) {
-  return <Tooltip id="character_tooltip">{message}</Tooltip>;
+  return (
+    <Tooltip id="character_tooltip" style={{ position: "fixed" }}>
+      {message}
+    </Tooltip>
+  );
+}
+
+const isNumber = (cell: Cell<any, unknown>) => {
+  const value: any = cell.getValue();
+  return typeof value === "number";
+};
+
+const past_due = (row: any) => {
+  if (row.paid) {
+    return "bg-info bg-opacity-25";
+  }
+  let value = row.due_date;
+  let now = new Date();
+  let comp = new Date(value);
+  if (comp < now) {
+    return "bg-danger bg-opacity-25";
+  } else {
+    return "";
+  }
 }
 
 const exportToCSV = (table: ReactTable<any>, exportFileName: string) => {
@@ -160,9 +183,8 @@ function _baseTable({
   exportFileName = undefined,
 }: _BaseTableProps) {
   const { rows } = table.getRowModel();
-  const location = useLocation();
   const fileName =
-    typeof exportFileName !== "undefined" ? exportFileName : `ExportedData_${location.pathname}`;
+    typeof exportFileName !== "undefined" ? exportFileName : `ExportedData`;
   return (
     <>
       <Table {...{ striped, hover }}>
@@ -192,9 +214,8 @@ function _baseTable({
                               )}
                             </div>
                           ) : null}
-                          <div>
-                            {flexRender(header.column.columnDef.header, header.getContext())}
-                          </div>
+
+                          {flexRender(header.column.columnDef.header, header.getContext())}
                         </div>
                       )}
                     </th>
@@ -222,8 +243,16 @@ function _baseTable({
             return (
               <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => {
+                  
                   return (
-                    <td key={cell.id} style={{ verticalAlign: "middle" }}>
+                    <td
+                      key={cell.id}
+                      className={cell?.row?.original?.due_date ? past_due(cell?.row?.original) : ""}
+                      style={{
+                        verticalAlign: "middle",
+                        textAlign: isNumber(cell) ? "right" : "left",
+                      }}
+                    >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   );
@@ -234,7 +263,7 @@ function _baseTable({
         </tbody>
       </Table>
       <div className="d-flex justify-content-between">
-        <ButtonGroup>
+        <ButtonGroup style={{ zIndex: 0 }}>
           <Button active variant="info">
             {
               <>
@@ -269,7 +298,7 @@ function _baseTable({
         </ButtonGroup>
 
         <ButtonToolbar>
-          <ButtonGroup>
+          <ButtonGroup style={{ zIndex: 0 }}>
             <Button
               variant="success"
               onClick={() => table.setPageIndex(0)}
@@ -300,7 +329,7 @@ function _baseTable({
             </Button>
           </ButtonGroup>
 
-          <ButtonGroup className="ms-1">
+          <ButtonGroup style={{ zIndex: 0 }} className="ms-1">
             <Button active variant="success">
               {"Page Size:"}
             </Button>{" "}

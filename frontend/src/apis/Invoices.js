@@ -1,5 +1,5 @@
 import axios from "axios";
-import cookies from "js-cookies";
+import Cookies from "js-cookie";
 
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 
@@ -29,7 +29,7 @@ export async function postPayInvoice(id) {
   const api = await axios.post(
     `/invoice/api/admin/paid/${id}`,
     { id: id },
-    { headers: { "X-CSRFToken": cookies.getItem("csrftoken") } }
+    { headers: { "X-CSRFToken": Cookies.getItem("csrftoken") } }
   );
   return api.data;
 }

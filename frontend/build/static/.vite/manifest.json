@@ -1,16 +1,18 @@
 {
-  "_@libs-GjwcVrZE.js": {
-    "file": "assets/@libs-GjwcVrZE.js"
+  "_@libs-BVA4f53m.js": {
+    "file": "assets/@libs-BVA4f53m.js",
+    "name": "@libs"
   },
   "index.html": {
-    "css": [
-      "static/invoices/static/css/index-AA1-fSBX.css"
-    ],
-    "file": "assets/index-L5Z108-M.js",
-    "imports": [
-      "_@libs-GjwcVrZE.js"
-    ],
+    "file": "assets/index-CdmkFHy6.js",
+    "name": "index",
+    "src": "index.html",
     "isEntry": true,
-    "src": "index.html"
+    "imports": [
+      "_@libs-BVA4f53m.js"
+    ],
+    "css": [
+      "static/invoices/static/css/index-DGGPf4Q8.css"
+    ]
   }
 }
