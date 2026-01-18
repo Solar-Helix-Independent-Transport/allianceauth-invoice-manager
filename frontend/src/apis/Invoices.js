@@ -29,7 +29,7 @@ export async function postPayInvoice(id) {
   const api = await axios.post(
     `/invoice/api/admin/paid/${id}`,
     { id: id },
-    { headers: { "X-CSRFToken": Cookies.getItem("csrftoken") } }
+    { headers: { "X-CSRFToken": Cookies.get("csrftoken") } }
   );
   return api.data;
 }
