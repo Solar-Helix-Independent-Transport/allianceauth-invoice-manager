@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('corptools', '0035_auto_20200929_0114'),
-        ('eveonline', '0012_index_additions'),
+        ('eveonline', '0019_v5squash'),
     ]
 
     operations = [
